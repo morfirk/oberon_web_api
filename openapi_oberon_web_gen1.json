@@ -1,0 +1,428 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "OBERON Web API Gen.1",
+        "description": "REST API for OBERON aplication webservices. Mandatory attributes are marked with '*' in the 'Schema' documentation section.",
+        "contact": {
+            "name": "EXALOGIC",
+            "url": "https://exalogic.sk/homepage/kontakty/",
+            "email": "exalogic@exalogic.sk",
+            "x-teams": "N/A",
+            "x-url": "https://exalogic.sk/homepage/kontakty/",
+            "x-email": "exalogic@exalogic.sk"
+        },
+        "version": "1.0",
+        "x-scope": "public",
+        "x-technologies": [
+            ".NET",
+            "MariaDB"
+        ],
+        "x-keywords": [
+            "e-pos",
+            "warehouse",
+            "stock",
+            "hotel",
+            "pos",
+            "cash register",
+            "invoicing"
+        ],
+        "x-related-masterdata": "article",
+        "x-solution": "OBERONWebG1",
+        "x-git-url": ""
+    },
+    "servers": [
+        {
+            "url": "http://localhost:21005",
+            "description": "Generated server url"
+        }
+    ],
+    "security": [
+        {
+            "Basic authentication": []
+        }
+    ],
+    "tags": [
+        {
+            "name": "Hotel",
+            "description": "Communication with hotel reservation system"
+        },
+        {
+            "name": "Stock",
+            "description": "Warehousing, stock handling"
+        },
+        {
+            "name": "CashRegister",
+            "description": "Information about sales"
+        }
+    ],
+    "paths": {
+        "/GetHotel_RoomReservation": {
+            "post": {
+                "tags": [
+                    "Hotel"
+                ],                
+                "operationId": "getHotelRoomReservation",
+                "summary": "Get data for hotel room reservation.",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "$ref": "#/components/schemas/HotelReservationArg"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Požiadavka bola spracovaná API. Výsledok spracovania a prípadné chyby sa nachádzajú v datach.",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/HotelReservationResult"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The request contains validation errors.",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "Internal error, please report this error along with the request call to the development team",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ping": 
+        {
+            "get": {
+                "tags": [
+                    "System"
+                ],
+                "operationId": "systemPing",
+                "summary": "Overenie dostupnosti služby (vracia IP adresu požiadavky).",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string",                                    
+                                    "example": "127.0.0.1"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": { 
+            "HotelReservationArg": {
+                "required": [
+                    "FindBy",
+                    "FindByValue"
+                ],
+                "description": "Argument funkcie pre načítanie (vyhľadanie) údajov existujúcej rezervácie ubytovania v module Hotelová recepcia.",
+                "type": "object",
+                "properties": {
+                    "FindBy": {
+                        "type": "integer",
+                        "description": "Určuje druh hodnoty, podľa ktorej má byť vyhľadaná (načítaná) rezervácia. Hodnota sa nachádza v parametri 'FindByValue'.",
+                        "oneOf": [
+                            {
+                                "const": 0,
+                                "title": "IDNum",
+                                "description": "Jedinečný identifikátor v systéme OBERON používaný interne. Vyhľadanie rezervácie podľa interného čísla rezervácie je možné len pri službe, ktorá má nastavenie prihlasovania používateľov systému OBERON. Dôvodom je bezpečnosť - obmedzenie 'dolovania' údajov."
+                            },
+                            {
+                                "const": 1,
+                                "title": "GUID",
+                                "description": "Jedinečný verejný identifikátor záznamu rezervácie v systéme OBERON (náhodný reťazec). Môže sa napr. použiť ako direct link, kedy sa zašle hosťovi e-mailom a on môže prostredníctvom webovej aplikácie (formulára) zadať osobné údaje k rezervácii. Pri načítaní rezervácie pomocou GUID webová služba môže pracovať aj v režime bez autentifikácie."
+                            },
+                            {
+                                "const": 2,
+                                "title": "ReservationNumber",
+                                "description": "Číslo rezervácie v systéme OBERON. Vyhľadanie rezervácie podľa interného čísla rezervácie je možné len pri službe, ktorá má nastavenie prihlasovania používateľov systému OBERON. Dôvodom je bezpečnosť - obmedzenie 'dolovania' údajov."
+                            },
+                            {
+                                "const": 5,
+                                "title": "ExternalReservationNumber",
+                                "description": "Externé číslo rezervácie pochádzajúce z externého systému napr. 'Booking.com' (používateľovi je toto číslo prístupné vo formulári rezervácie). Vyhľadanie rezervácie podľa externého čísla rezervácie je možné len pri službe, ktorá má nastavenie prihlasovania používateľov systému OBERON. Dôvodom je bezpečnosť - obmedzenie 'dolovania' údajov."
+                            }
+                        ]
+                    },
+                    "FindByValue": {
+                        "type": "string",
+                        "description": "Hodnota pre načítanie (vyhľadanie) rezervácie ubytovania - typ hodnoty určuje parameter 'FindBy'.",
+                        "example": "100000"
+                    }
+                }
+            },
+            "HotelReservation": {
+                "type": "object",
+                "required": [
+                    "Number",
+                    "DateArrival",
+                    "DateDeparture",
+                    ""
+                ],
+                "description": "Objek základných údajov rezervácie (jedna rezervácia môže obsahovať viac ako jednu rezervovanú izbu).",
+                "properties": {
+                    "ReservationType": {
+                        "type": "integer",
+                        "description": "Určuje typ rezervácie.",
+                        "oneOf": [
+                            {
+                                "const": 0,
+                                "title": "Štandardná",
+                                "description": "Štandardná rezervácia."
+                            },
+                            {
+                                "const": 2,
+                                "title": "Zmluvná rezervácia",
+                                "description": "Zmluvná rezervácia napr. s cestovnou kanceláriou. Nejedná sa o rezerváciu konkrétnej osoby na konkrétny termín. O spracovanie hosťa sa stará cestovná kancelária."
+                            }
+                        ]
+                    },
+                    "GUID": {
+                        "type": "string",
+                        "description": "Jedinečný verejný identifikátor záznamu rezervácie v systéme OBERON (generovaný systémom). Môže sa napr. použiť ako priamy odkaz, kedy sa zašle hosťovi a on môže prostredníctvom webovej aplikácie zadať osobné údaje. Pri novej rezervácii sa nezadáva, generuje sa automaticky systémom OBERON.",
+                        "example": "38e1efb1-2dd2-42fa-97d4-3f7e9b82638f"
+                    },
+                    "Number": {
+                        "type": "string",
+                        "description": "Číslo rezervácie priradené systémom OBERON."
+                    },
+                    "DateArrival": {
+                        "type": "string",
+                        "description": "Dátum príchodu (dátum vo formáte yyyy-MM-ddTHH:mm:ss)",
+                        "example": "2025-01-01T10:55:00"
+                    },
+                    "Nights": {
+                        "type": "number",
+                        "format": "int32",
+                        "minimum": 1,
+                        "description": "Počet nocí rezervácie."
+                    },
+                    "DateDeparture": {
+                        "type": "string",
+                        "description": "Dátum odchodu (dátum vo formáte yyyy-MM-ddTHH:mm:ss).",
+                        "example": "2025-01-01T10:55:00"
+                    },
+                    "Rooms": {
+                        "type": "array",
+                        "description": "Obsahuje údaje o rezerovanej jednej, prípadne viacerých izbách (pri skupinovej rezervácii). Pri novej rezervácii alebo zisťovaní obsadenosti (dopyte na voľný termín) sa môže zadať len typ izby (alebo viac typov izieb), OBERON priradí konkrétnu izbu automaticky (ak je voľná/dostupná).",
+                        "items": {
+                            "#ref": "#/components/schemas/HotelReservationRoom"
+                        }
+                    },
+                    "Calculated_Price": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Cenová kalkulácia (cena)."
+                    },
+                    "PriceInAdvance": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Suma požadovanej zálohovej (rezervačnej) platby."
+                    },
+                    "DateExpiration": {
+                        "type": "string",
+                        "description": "Dátum vypršania platnosti rezervácie. Platnosť rezervácie skončí ak nie je potvrdená (dátum vo formáte yyyy-MM-ddTHH:mm:ss).",
+                        "example": "2025-01-01T10:55:00"
+                    },
+                    "ReservationState": {
+                        "type": "integer",
+                        "description": "Stav novej rezervácie (napr. 16 = Nepotvrdená rezervácia, 32 = Potvrdená rezervácia). Stav rezervácie určuje systém a užívatelia."
+                    },
+                    "PartnerNumber": {
+                        "type": "string",
+                        "description": "Identifikačné číslo partnera, ktorý vykonal rezerváciu."
+                    },
+                    "PartnerNumberContractReservation": {
+                        "type": "string",
+                        "description": "Identifikačné číslo zmluvného partnera."
+                    },
+                    "VariableSymbol": {
+                        "type": "string",
+                        "description": "Variabilný symbol - môže obsahovať údaj napojenia na externé systémy (ľubovolná textová hodnota)."
+                    },
+                    "ExternalSystemIdentifier": {
+                        "type": "string",
+                        "description": "Systémový identifikátor externého systému. Obsahuje údaj o prepojení s externým systémom. Hodnota je uložená do databázy, avšak pre užívateľa je nedostupná."
+                    },
+                    "ExternalSystemNumber": {
+                        "type": "string",
+                        "description": "Číslo rezervácie z externého systému, napr. číslo rezervácie zo systému 'booking.com'."
+                    },
+                    "Name": {
+                        "type": "string",
+                        "description": "Názov rezervácie - meno osoby."
+                    },
+                    "FamilyName": {
+                        "type": "string",
+                        "description": "Názov rezervácie - priezvisko."
+                    },
+                    "Email": {
+                        "type": "string",
+                        "description": "E-mail osoby, ktorá rezerváciu vykonala."
+                    },
+                    "Notice": {
+                        "type": "string",
+                        "description": "Poznámka k rezervácii."
+                    },
+                    "OtherRecords": {
+                        "type": "string",
+                        "description": "Iné záznamy (dlhší textový popis (65536 znakov))."
+                    },
+                    "Phone": {
+                        "type": "string",
+                        "description": "Telefónny kontakt na osobu, ktorý vykonala rezerváciu."
+                    },
+                    "Address_Street": {
+                        "type": "string",
+                        "description": "Adresa osoby (ulica), ktorá si rezervovala ubytovanie."
+                    },
+                    "Address_City": {
+                        "type": "string",
+                        "description": "Adresa osoby (obec), ktorá si rezervovala ubytovanie."
+                    },
+                    "Address_Country": {
+                        "type": "string",
+                        "description": "Adresa osoby (krajina), ktorá si rezervovala ubytovanie."
+                    },
+                    "Address_PostalCode": {
+                        "type": "string",
+                        "description": "Adresa osoby (PSČ), ktorá si rezervovala ubytovanie."
+                    },
+                    "ReservationSourceName": {
+                        "type": "string",
+                        "description": "Názov (pomenovanie) zdroja rezervácie."
+                    },
+                    "AdultsCount": {
+                        "type": "number",
+                        "format": "int32",
+                        "minimum": 0,
+                        "description": "Počet dospelých osôb v rezervácii."
+                    },
+                    "ChildrenCount": {
+                        "type": "number",
+                        "format": "int32",
+                        "minimum": 0,
+                        "description": "Počet detí v rezervácii."
+                    }
+                }
+            },
+            "HotelReservationResult": {         
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ResultValueOf"
+                    },
+                    {                        
+                        "properties": {
+                            "data": {
+
+                                "$ref": "#/components/schemas/HotelReservation"
+                            }
+                        }
+                    }
+                ]
+            },
+            "HotelReservationRoom": {
+                "type": "object",
+                "properties": {
+                    "Number": {
+                        "type": "string",
+                        "description": "Číslo izby. Každá rezervácia v systéme OBERON musí mať zadanú aj izbu (nielen typ izby). Avšak pri vytváraní novej rezervácie izba nemusí byť zadaná - vtedy OBERON vyberie izbu automaticky (podľa typu izby). Ak sa pri dopyte na voľný termín zadá číslo izby a aj názov izby, bude sa daný dopyt považovať dopytom na konkrétnu izbu."
+                    },
+                    "Name": {
+                        "type": "string",
+                        "description": "Pomenovanie izby. Každá rezervácia v systéme OBERON musí mať zadanú aj izbu (nielen typ izby). Avšak pri vytváraní novej rezervácie izba nemusí byť zadaná - vtedy OBERON vyberie izbu automaticky (podľa typu izby). Ak pri novej rezervácii tu bude zadaný názov a nebude zadané číslo izby, tu zadaná izba sa bude považovať len za preferovanú (predvolenú)."
+                    },
+                    "RoomTypeID": {
+                        "type": "number",
+                        "format": "int32",
+                        "minimum": 0,
+                        "description": "Jednoznačný identifikátor typu izby."
+                    },
+                    "RoomTypeName": {
+                        "type": "string",
+                        "description": "Názov typu izby."
+                    },
+                    "Beds": {
+                        "type": "number",
+                        "format": "int32",
+                        "minimum": 0,
+                        "description": "Počet pevných lôžok v rezervácii. V rezervácii môže byť aj viac izieb."
+                    },
+                    "ExtraBeds": {
+                        "type": "number",
+                        "format": "int32",
+                        "minimum": 0,
+                        "description": "Počet príležitostných lôžok v rezervácií. V rezervácii môže byť aj viac izieb."
+                    },
+                    "ChildrenAge": {
+                        "type": "array",
+                        "description": "Ak sa nachádzajú v rezervácii aj deti, zadávajú sa veky detí.",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "ExternalSystemIdentifier": {
+                        "type": "string",
+                        "description": "Identifikátor externého systému konkrétnej izby v danej rezervácii. Obsahuje údaj o prepojení s externým systémom, napr. rezervácia vytvorená konektorom AvailPro, Beds24, prípadne systémom využívajúce tieto webové služby."
+                    },
+                    "Notice": {
+                        "type": "string",
+                        "description": "Ľubovolná poznámka k izbe v rezervácii (max. 255)."
+                    },
+                    "DoorKeyPIN": {
+                        "type": "string",
+                        "description": "Používa sa pre dverový (trezorový) systém - obsahuje hodnotu pre otvorenie dverí izby (prípadne trezoru). PIN kód sa môže zaslať hosťovi, čo mu umožní automaticky sa ubytovať aj bez prítomnosti pracovníka recepcie."
+                    }
+                }
+            },                                   
+            "ResultValueOf" : {
+                "type": "object",
+                "description": "Základný objekt výsledku volaných metód API obsahuje údaje s pracovaní. Samotné výsledné data sa nachádzajú v parametri 'data', ktorého typ určruje volaná API metóda. Objekt je dedený vo výsledných objektov metód.",
+                "properties": {
+                    "result": {
+                        "type": "bool",
+                        "description": "Výsledok volanej metódy, result = TRUE - metóda bola úspešná, result = FALSE - metóda bola neúspešná."
+                    },
+                    "errNumber": {
+                        "type": "integer",
+                        "description": "Kód chyby, vrátený API prípadne niektorou z interne volaných funkcií."
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Popis chyby."
+                    },
+                    "data": {
+                        "type": "object",
+                        "description": "Druh objektu výsledku určuje volaná API metóda."
+                    }
+                }                
+            }
+        }
+    }
+}
