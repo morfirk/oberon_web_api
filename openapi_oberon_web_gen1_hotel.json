@@ -32,27 +32,24 @@
     },
     "servers": [
         {
-            "url": "http://localhost:21005",
+            "url": "http://localhost:21006",
             "description": "Generated server url"
+        },
+        {
+            "url": "http://192.168.16.11:21006",
+            "description": "MyPC"
         }
     ],
     "security": [
         {
-            "Basic authentication": []
+            "BasicAuth": [],
+            "userDataHeader": []
         }
     ],
     "tags": [
         {
             "name": "Hotel",
             "description": "Metódy pre komunikáciu s modulom Hotelová recepcia"
-        },
-        {
-            "name": "Stock",
-            "description": "Metódy pre komunikáciu s modulom Skladová evidencia"
-        },
-        {
-            "name": "CashRegister",
-            "description": "Metódy pre komunikáciu s modulom Pokladnica OBERON"
         },
         {
             "name": "System",
@@ -432,9 +429,188 @@
                     }
                 }
             }
+        },
+        "/GetLoginSalt": {
+            "post": {
+                "tags": [
+                    "System"
+                ],
+                "operationId": "loginSalt",
+                "summary": "Vráti tzv. SALT, ktorý je používaný pri hashovaní hesla pri prihlásení používateľa.",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "username"
+                                ],
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "description": "Meno používateľa pre ktorý sa salt generuje a následne pri ďalšom prihlásení (metóda LoginUser) použije.",
+                                        "example": "admin"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ResultValueOf"
+                                        },
+                                        {                        
+                                            "properties": {
+                                                "data": {
+                                                    "type": "string",
+                                                    "description": "Obsahuje text saltu pre použitie pri prihlásení."
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/LoginUserEx": {
+            "post": {
+                "tags": [
+                    "System"
+                ],
+                "operationId": "loginSalt",
+                "summary": "Vráti tzv. SALT, ktorý je používaný pri hashovaní hesla pri prihlásení používateľa.",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "username"
+                                ],
+                                "properties": {
+                                    "username": {
+                                        "type": "object",
+                                        "description": "Údaje pre prihlásenie používateľa.",
+                                        "$ref": "#/components/schemas/LoginDataArg"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ResultValueOf"
+                                        },
+                                        {                        
+                                            "properties": {
+                                                "data": {
+                                                    "type": "string",
+                                                    "description": "Neobsahuje žiadny text."
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/SwaggerLogin": {
+            "post": {
+                "tags": [
+                    "System"
+                ],
+                "operationId": "swaggerLogin",
+                "summary": "Prihlásenie používateľa z tejto dokumentácie.",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "username"
+                                ],
+                                "properties": {
+                                    "username": {
+                                        "type": "object",
+                                        "description": "Prihlasovacie meno.",
+                                        "example": "admin"
+                                    },
+                                    "password": {
+                                        "type": "object",
+                                        "description": "Heslo.",
+                                        "example": "admin"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ResultValueOf"
+                                        },
+                                        {                        
+                                            "properties": {
+                                                "data": {
+                                                    "type": "string",
+                                                    "description": "Neobsahuje žiadny text."
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }           
         }
     },
     "components": {
+        "securitySchemes": {
+            "BasicAuth": {
+              "type": "http",
+              "scheme": "basic"
+            },
+            "userDataHeader" :{
+                "in": "header",
+                "type": "apiKey",
+                "name": "userData",
+                "example": "null"
+            }
+        },
         "schemas": { 
             "HotelReservationArg": {
                 "description": "Argument funkcie pre načítanie (vyhľadanie) údajov existujúcej rezervácie ubytovania.",
@@ -2199,6 +2375,25 @@
                     }
                 }
             },
+            
+            "LoginDataArg" : {
+                "type": "object",
+                "description": "Spravidla sa používa v návratovej hodnote 'ResultValueOf' vo vlastnosti Data (Data As RecordBaseInfo). Je využívaná hlavne ako časť návratovej hodnoty pri metódach, ktoré vytvárajú nové záznamy - po vytvorení záznamu sa vracia jeho jednoznačný identifikátor a napr. číslo dokladu.",
+                "properties": {
+                    "UserName": {
+                        "type": "string",
+                        "description": "Meno používateľa."
+                    },
+                    "Password": {
+                        "type": "string",
+                        "description": "Hash hesla (typu SHA-1), prípadne hash hesla obohatený o SALT (k salt-u sa pripojí heslo a následne sa vytvorí hash, salt je možné získať metódou GetLoginSalt). V odôvodnených prípadoch je možné zasielať heslo aj ako čistý text, znižuje to však bezpečnosť webovej služby (umožňuje útočníkovi získať heslo - záleží však aj na nastavení spôsobu zabezpečenia webovej služby)."
+                    },
+                    "LoginTag": {
+                        "type": "string",
+                        "description": "Ľubovoľná textová hodnota - danú hodnotu si webová služba uloží. Tým je možné napr. overiť zoznam pripojených externých zariadení do webovej služby."
+                    }
+                }                
+            },
 
             "RecordBaseInfo" : {
                 "type": "object",
@@ -2243,6 +2438,20 @@
                     "data": {
                         "type": "object",
                         "description": "Druh objektu výsledku určuje volaná API metóda."
+                    }
+                }                
+            },
+            "SwaggerLoginDataArg" : {
+                "type": "object",
+                "description": "Pre prishlásenie sa k službe z tejto dokumentácie.",
+                "properties": {
+                    "UserName": {
+                        "type": "string",
+                        "description": "Meno používateľa."
+                    },
+                    "Password": {
+                        "type": "string",
+                        "description": "Heslo."
                     }
                 }                
             }
