@@ -2,8 +2,7 @@
 (function () {
     /*
     Exalogic - API module    
-    by Mario Moravcik - August 2023
-    Test: SK1020000938 , SK2021861127
+    by Mario Moravcik - August 2025
     */  
     var eModule = (function () {
         window.oberonWeb = eModule;        
@@ -106,8 +105,6 @@
 
         return eModule;
     })();
-
-    //window.oberonWeb = new eModule(window, {});
 
 }).call(this);
 
