@@ -1,2 +1,2 @@
 # oberon_web_api
-Documentation for OBERON Web API.
+Dokuemntácia pre OBERON Web API vo verzii OPEN API (swagger).

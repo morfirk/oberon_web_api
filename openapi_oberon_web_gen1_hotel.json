@@ -42,8 +42,7 @@
     ],
     "security": [
         {
-            "BasicAuth": [],
-            "userDataHeader": []
+            "UserTokenAuth": []
         }
     ],
     "tags": [
@@ -57,6 +56,39 @@
         }
     ],
     "paths": {
+        "/v1/hotel/reservation/get": {
+            "post": {
+                "tags": [
+                    "Hotel"
+                ],                
+                "operationId": "hotelReservationGet",
+                "summary": "Načítanie údajov konkrétnej rezervácie ubytovania z evidencie v module Hotelová recepcia.",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",                                
+                                "$ref": "#/components/schemas/HotelReservationArg"                                
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Požiadavka bola spracovaná API. Výsledok spracovania a prípadné chyby sa nachádzajú v datach.",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HotelReservationResult"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/GetHotel_RoomReservation": {
             "post": {
                 "tags": [
@@ -70,7 +102,12 @@
                         "application/json": {
                             "schema": {
                                 "type": "object",
-                                "$ref": "#/components/schemas/HotelReservationArg"
+                                "properties": {
+                                    "HotelReservationArg": {
+                                        "type": "object",
+                                        "$ref": "#/components/schemas/HotelReservationArg"
+                                    }
+                                }                                
                             }
                         }
                     },
@@ -103,7 +140,12 @@
                         "application/json": {
                             "schema": {
                                 "type": "object",
-                                "$ref": "#/components/schemas/HotelRoomReservationArg"
+                                "properties": {
+                                    "HotelRoomReservation": {
+                                        "type": "object",
+                                        "$ref": "#/components/schemas/HotelRoomReservationArg"
+                                    }
+                                }
                             }
                         }
                     },
@@ -129,7 +171,7 @@
                 "tags": [
                     "Hotel"
                 ],                
-                "operationId": "setHotelRoomReservation",
+                "operationId": "setHotelRoomReservationState",
                 "summary": "Zmení stav už existujúcej rezervácie. Taktiež umožňuje zadať údaje o prijatej zálohe.",
                 "parameters": [],
                 "requestBody": {
@@ -137,7 +179,12 @@
                         "application/json": {
                             "schema": {
                                 "type": "object",
-                                "$ref": "#/components/schemas/HotelRoomReservationArg"
+                                "properties": {
+                                    "Hotel_ReservationStateArg": {
+                                        "type": "object",
+                                        "$ref": "#/components/schemas/HotelReservationStateSetArg"
+                                    }
+                                }                                
                             }
                         }
                     },
@@ -150,7 +197,7 @@
                             "*/*": {
                                 "schema": {
                                     "type": "object",
-                                    "$ref": "#/components/schemas/HotelRoomReservationResult"
+                                    "$ref": "#/components/schemas/HotelReservationStateSetResult"
                                 }
                             }
                         }
@@ -171,7 +218,12 @@
                         "application/json": {
                             "schema": {
                                 "type": "object",
-                                "$ref": "#/components/schemas/HotelRoomReservationAvailabilityArg"
+                                "properties": {
+                                    "HotelRoomReservationAvailabilityArg": {
+                                        "type": "object",
+                                        "$ref": "#/components/schemas/HotelRoomReservationAvailabilityArg"
+                                    }
+                                }                                
                             }
                         }
                     },
@@ -205,7 +257,12 @@
                         "application/json": {
                             "schema": {
                                 "type": "object",
-                                "$ref": "#/components/schemas/HotelGuestsGetArg"
+                                "properties": {
+                                    "Hotel_GuestsGetArg": {
+                                        "type": "object",
+                                        "$ref": "#/components/schemas/HotelGuestsGetArg"
+                                    }
+                                }
                             }
                         }
                     },
@@ -239,7 +296,46 @@
                         "application/json": {
                             "schema": {
                                 "type": "object",
-                                "$ref": "#/components/schemas/HotelGuestsSetArg"
+                                "properties": {
+                                    "HotelGuestsSetArg": {
+                                        "type": "object",
+                                        "$ref": "#/components/schemas/HotelGuestsSetArg"
+                                    }
+                                }                                
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Požiadavka bola spracovaná API. Výsledok spracovania a prípadné chyby sa nachádzajú v datach.",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/HotelGuestsSetResult"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/hotel/reservation/guest/delete" : {
+            "post": {
+                "tags": [
+                    "Hotel"
+                ],                
+                "operationId": "hotelGuestsDelete",
+                "summary": "Vymazanie hostí z rezervácie ubytovania hotelovej recepcie. Údaje hostí je možné získať pomocou metódy 'GetHotel_Guests'.",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "$ref": "#/components/schemas/HotelGuestsDeleteArg"
                             }
                         }
                     },
@@ -273,7 +369,12 @@
                         "application/json": {
                             "schema": {
                                 "type": "object",
-                                "$ref": "#/components/schemas/HotelOccupyArg"
+                                "properties": {
+                                    "Hotel_Occupy": {
+                                        "type": "object",
+                                        "$ref": "#/components/schemas/HotelOccupyArg"
+                                    }
+                                }
                             }
                         }
                     },
@@ -309,7 +410,7 @@
                             "*/*": {
                                 "schema": {
                                     "type": "object",
-                                    "$ref": "#/components/schemas/HotelRoomTypesGetRegult"
+                                    "$ref": "#/components/schemas/HotelRoomTypesGetResult"
                                 }
                             }
                         }
@@ -330,7 +431,12 @@
                         "application/json": {
                             "schema": {
                                 "type": "object",
-                                "$ref": "#/components/schemas/HotelPriceCategoryGuestArg"
+                                "properties": {
+                                    "PriceCategoryGuestsArg": {
+                                        "type": "object",
+                                        "$ref": "#/components/schemas/HotelPriceCategoryGuestArg"
+                                    }
+                                }                                
                             }
                         }
                     },
@@ -387,7 +493,12 @@
                         "application/json": {
                             "schema": {
                                 "type": "object",
-                                "$ref": "#/components/schemas/HotelGraphicalViewRoomsDataArg"
+                                "properties": {
+                                    "graphicalViewRoomsDataCondition": {
+                                        "type": "object",
+                                        "$ref": "#/components/schemas/HotelGraphicalViewRoomsDataArg"
+                                    }
+                                }                                
                             }
                         }
                     },
@@ -408,6 +519,7 @@
                 }
             }
         },
+
         "/ping": {
             "get": {
                 "tags": [
@@ -472,7 +584,8 @@
                                             "properties": {
                                                 "data": {
                                                     "type": "string",
-                                                    "description": "Obsahuje text saltu pre použitie pri prihlásení."
+                                                    "description": "Obsahuje text saltu pre použitie pri prihlásení.",
+                                                    "example": "výsledná salt"
                                                 }
                                             }
                                         }
@@ -489,7 +602,7 @@
                 "tags": [
                     "System"
                 ],
-                "operationId": "loginSalt",
+                "operationId": "loginUserEx",
                 "summary": "Vráti tzv. SALT, ktorý je používaný pri hashovaní hesla pri prihlásení používateľa.",
                 "parameters": [],
                 "requestBody": {
@@ -537,78 +650,14 @@
                     }
                 }
             }
-        },
-        "/SwaggerLogin": {
-            "post": {
-                "tags": [
-                    "System"
-                ],
-                "operationId": "swaggerLogin",
-                "summary": "Prihlásenie používateľa z tejto dokumentácie.",
-                "parameters": [],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "required": [
-                                    "username"
-                                ],
-                                "properties": {
-                                    "username": {
-                                        "type": "object",
-                                        "description": "Prihlasovacie meno.",
-                                        "example": "admin"
-                                    },
-                                    "password": {
-                                        "type": "object",
-                                        "description": "Heslo.",
-                                        "example": "admin"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "allOf": [
-                                        {
-                                            "$ref": "#/components/schemas/ResultValueOf"
-                                        },
-                                        {                        
-                                            "properties": {
-                                                "data": {
-                                                    "type": "string",
-                                                    "description": "Neobsahuje žiadny text."
-                                                }
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                }
-            }           
         }
     },
     "components": {
         "securitySchemes": {
-            "BasicAuth": {
-              "type": "http",
-              "scheme": "basic"
-            },
-            "userDataHeader" :{
+            "UserTokenAuth" :{
+                "type": "apiKey",                
                 "in": "header",
-                "type": "apiKey",
-                "name": "userData",
-                "example": "null"
+                "name": "userData"                
             }
         },
         "schemas": { 
@@ -623,6 +672,7 @@
                     "FindBy": {
                         "type": "integer",
                         "description": "Určuje druh hodnoty, podľa ktorej má byť vyhľadaná (načítaná) rezervácia. Hodnota sa nachádza v parametri 'FindByValue'.",
+                        "example": 1,
                         "oneOf": [
                             {
                                 "const": 0,
@@ -649,11 +699,11 @@
                     "FindByValue": {
                         "type": "string",
                         "description": "Hodnota pre načítanie (vyhľadanie) rezervácie ubytovania - typ hodnoty určuje parameter 'FindBy'.",
-                        "example": "100000"
+                        "example": "e2ae6143-cbcf-4cfa-86e8-98a23d733bfe"
                     }
                 }
             },
-            "HotelReservationResult": {         
+            "HotelReservationResult": {
                 "allOf": [
                     {
                         "$ref": "#/components/schemas/ResultValueOf"
@@ -682,15 +732,18 @@
                     },
                     "PriceCalculateAccommodation": {
                         "type": "bool",
-                        "description": "TRUE - pri zápise novej rezervácie sa automaticky vytvorí cenová kalkulácia ubytovania. \n FALSE - pri zápise novej rezervácie sa nebude vytvárať cenová kalkulácia rezervácie. Cenová kalkulácia môže byť zadaná v parametri 'PriceItems'."
+                        "description": "TRUE - pri zápise novej rezervácie sa automaticky vytvorí cenová kalkulácia ubytovania. \n FALSE - pri zápise novej rezervácie sa nebude vytvárať cenová kalkulácia rezervácie. Cenová kalkulácia môže byť zadaná v parametri 'PriceItems'.",
+                        "example": true
                     },
                     "PriceCalculateTouristTax": {
                         "type": "bool",
-                        "description": "TRUE - pri zápise novej rezervácie sa automaticky vytvorí aj cenová kalkulácia dane z ubytovania. Tu sa posudzujú rezerované osoby, veky detí a podobne. \n FALSE - pri zápise novej rezervácie sa nebude vytvárať cenová kalkulácia dane z ubytovania. Cenová kalkulácia môže byť zadaná v parametri 'PriceItems'."
+                        "description": "TRUE - pri zápise novej rezervácie sa automaticky vytvorí aj cenová kalkulácia dane z ubytovania. Tu sa posudzujú rezerované osoby, veky detí a podobne. \n FALSE - pri zápise novej rezervácie sa nebude vytvárať cenová kalkulácia dane z ubytovania. Cenová kalkulácia môže byť zadaná v parametri 'PriceItems'.",
+                        "example": true
                     },
                     "PriceCalculateServices": {
                         "type": "bool",
-                        "description": "TRUE - pri zápise novej rezervácie sa automaticky vytvorí aj cenová kalkulácia základných služieb (napr. raňajky). Tie však musia byť definované v zozname služieb rezervácie. \n FALSE - pri zápise novej rezervácie sa nebude vytvárať cenová kalkulácia základných služieb. Cenová kalkulácia môže byť zadaná v parametri 'PriceItems'."
+                        "description": "TRUE - pri zápise novej rezervácie sa automaticky vytvorí aj cenová kalkulácia základných služieb (napr. raňajky). Tie však musia byť definované v zozname služieb rezervácie. \n FALSE - pri zápise novej rezervácie sa nebude vytvárať cenová kalkulácia základných služieb. Cenová kalkulácia môže byť zadaná v parametri 'PriceItems'.",
+                        "example": true
                     },
                     "PriceItems": {
                         "type": "array",
@@ -706,7 +759,7 @@
                     }
                 }
             },           
-            "HotelRoomReservationResult": {         
+            "HotelRoomReservationResult": {
                 "allOf": [
                     {
                         "$ref": "#/components/schemas/ResultValueOf"
@@ -824,6 +877,64 @@
                 }
             },
 
+            "HotelReservationStateSetArg": {
+                "description": "Parameter metódy pre nastavenie stavu hotelovej rezervácie.",
+                "type": "object",
+                "required": [
+                    "IDNum",
+                    "ReservationState"
+                ],                
+                "properties": {
+                    "IDNum": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor rezervácie (číslo), je možné vyčítať z rezervácie.",
+                        "example": 0
+                    },
+                    "ReservationState": {
+                        "type": "number",
+                        "description": "Stav rezervácie, ktorý má byť nastavený (napr. Nepotvrdená rezervácia, Potvrdená rezervácia).",
+                        "$ref": "#/components/schemas/HotelReservationStateEnum"
+                    },
+                    "PaymentAdvancePrice": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Suma zaplatenej zálohy za ubytovanie (hodnota sa uvádza vo východzej mene systému v nastavenia firmy).",
+                        "example": 100.0
+                    },
+                    "PaymentAdvanceDate": {
+                        "type": "string",
+                        "description": "Dátum úhrady zálohy (dátum vo formáte yyyy-MM-ddTHH:mm:ss) [údaj je povinný v prípade ak je zadaná suma zálohy].",
+                        "example": "2025-01-01T10:55:00"
+                    },
+                    "PaymentAdvanceBillNumber": {
+                        "type": "string",
+                        "description": "Číslo dokladu o zaplatení zálohy (napr. číslo bankového prevodu).",
+                        "example": "2025/10/101"
+                    },
+                    "PaymentAdvanceNotice": {
+                        "type": "string",
+                        "description": "Poznámka k zaplatenej zálohe (max. 255 znakov).",
+                        "example": "Záloha uhradená na bankový účet SK11......"
+                    }
+                }
+            },
+            "HotelReservationStateSetResult": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ResultValueOf"
+                    },
+                    {                        
+                        "properties": {
+                            "data": {
+                                "description": "Objekt obsahuje jednoznačný identifikátor zmenenej rezervácie a jej číslo. Vo vlastnosti 'Info' je uvedená prípadná poznámka k zmene stavu názov vytvorenej rezervácie.",
+                                "$ref": "#/components/schemas/RecordBaseInfo"
+                            }
+                        }
+                    }
+                ]
+            },
+
             "HotelGuestsGetArg": {
                 "description": "Parameter pre načítanie osôb (hostí) konkrétneho ubytovania alebo rezervácie ubytovania, prípadne rezervácie služieb.",
                 "type": "object",
@@ -921,6 +1032,70 @@
                     }
                 ]
             },
+            "HotelGuestsDeleteArg": {
+                "description": "Parameter pre metódy pre vymazanie hostí zo záznamu rezervácie.",
+                "type": "object",
+                "required": [
+                    "GUID"
+                ],                
+                "properties": {
+                    "GUID": {
+                        "type": "string",
+                        "description": "Jednoznačný identifikátor GUID rezervácie ubytovania, ktorej záznamy hostí majú byť vymazané. Identifikátor rezervácie je možné pomocou metódy 'GetHotel_RoomReservation'."
+                    },
+                    "GuestIDNums": {
+                        "type": "array",
+                        "description": "Zoznam jednoznačných dentifikátorov hostí rezervácie pre vymazanie (typ IDNum). Identifikátory je možné načítať metódou 'GetHotel_Guests'.",
+                        "items": {
+                            "type": "number",
+                            "format": "int64",
+                            "example": 1234
+                        }
+                    },
+                    "GuestGuids": {
+                        "type": "array",
+                        "description": "> Zoznam jednoznačných dentifikátorov hostí rezervácie pre vymazanie (typ GUID). **Prebieha implementácia, aktuálne nie je možné vyčítať GUID hostí, preto táto možnosť nie je použiteľná.**",
+                        "items": {
+                            "type": "string",
+                            "example": "38e1efb1-2dd2-42fa-97d4-3f7e9b82638f"
+                        }
+                    }
+                }  
+            },
+            "HotelGuestsDeleteResult": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ResultValueOf"
+                    },
+                    {                        
+                        "properties": {
+                            "data": {
+                                "description": "Ak boli osoby úspešne zapísané, vrátený objekt bude obsahovať jednoznačný identifikátor rodičovského záznamu (napr. rezervácie) a jej číslo, 'Info' obsahuje názov záznamu, napr. rezervácie.",
+                                "$ref": "#/components/schemas/HotelGuestsDeleteResultData"
+                            }
+                        }
+                    }
+                ]
+            },
+            "HotelGuestsDeleteResultData": {
+                "description": "Objekt s údajmi o výsledku vymazania hostí zo záznamu rezervácie.",
+                "type": "object",
+                "required": [
+                    "GUID",
+                    "Items"
+                ],
+                "properties": {
+                    "GUID": {
+                        "type": "string",
+                        "description": "Jednoznačný identifikátor GUID rezervácie ubytovania, ktorej záznamy hostí majú byť vymazané. Identifikátor rezervácie je možné pomocou metódy 'GetHotel_RoomReservation'."
+                    },
+                    "Items": {
+                        "description": "Zoznam informácií o spracovaní požadovaných záznamov hostí.",
+                        "$ref": "#/components/schemas/RecordBaseInfo"
+                    }
+                }
+            },
+
 
             "HotelOccupyArg": {
                 "description": "Argument funkcie vrátenie obsadenosti (voľné a obsadené typy izieb) ubytovacieho zariadenia.",
@@ -967,7 +1142,7 @@
                 ]
             },
 
-            "HotelRoomTypesGetRegult": {
+            "HotelRoomTypesGetResult": {
                 "allOf": [
                     {
                         "$ref": "#/components/schemas/ResultValueOf"
@@ -1751,16 +1926,16 @@
                         "title": "OnlineRequest - nový on-line dopyt."
                     },
                     {
-                        "const": 8,
-                        "title": "RequestInProgress - dopyt (vybavuje sa)."
-                    },
-                    {
                         "const": 2,
                         "title": "OnLineReservation - nová on-line rezervácia.."
                     },
                     {
                         "const": 4,
                         "title": "OnLineReservationInProgress - on-line rezervácia (vybavuje sa)."
+                    },
+                    {
+                        "const": 8,
+                        "title": "RequestInProgress - dopyt (vybavuje sa)."
                     },
                     {
                         "const": 16,
@@ -1941,15 +2116,18 @@
                     },
                     "Name": {
                         "type": "string",
-                        "description": "Meno."
+                        "description": "Meno.",
+                        "example": "Janka"
                     },
                     "FamilyName": {
                         "type": "string",
-                        "description": "Priezvisko."
+                        "description": "Priezvisko.",
+                        "example": "Bežná"
                     },
                     "Title": {
                         "type": "string",
-                        "description": "Titul (pred menom)."
+                        "description": "Titul (pred menom).",
+                        "example": ""
                     },
                     "DateOfBirth": {
                         "type": "string",
@@ -1978,11 +2156,13 @@
                     },
                     "Address_PostalCode": {
                         "type": "string",
-                        "description": "Poštové smerovacie číslo (PSČ, ZIP)."
+                        "description": "Poštové smerovacie číslo (PSČ, ZIP).",
+                        "example": "01001"
                     },
                     "Address_City": {
                         "type": "string",
-                        "description": "Obec, mesto."
+                        "description": "Obec, mesto.",
+                        "example": "Bratislava"
                     },
                     "Address_Country": {
                         "type": "string",
@@ -1996,19 +2176,23 @@
                     },
                     "Email": {
                         "type": "string",
-                        "description": "Email."
+                        "description": "Email.",
+                        "example": "janka.bezna@test.com"
                     },
                     "PhoneNumber": {
                         "type": "string",
-                        "description": "Telefónne číslo."
+                        "description": "Telefónne číslo.",
+                        "example": ""
                     },
                     "RoomNumber": {
                         "type": "string",
-                        "description": "Číslo izby."
+                        "description": "Číslo izby.",
+                        "example": ""
                     },
                     "RoomName": {
                         "type": "string",
-                        "description": "Názov izby, v prípade rezervácie."
+                        "description": "Názov izby, v prípade rezervácie.",
+                        "example": ""
                     },
                     "Notice": {
                         "type": "string",
@@ -2303,7 +2487,7 @@
                 }
             },
 
-            "HotelRoomType": {                
+            "HotelRoomType": {
                 "type": "object",
                 "description": "Údaje o type izby.",
                 "required": [
@@ -2415,6 +2599,36 @@
                     "Info": {
                         "type": "string",
                         "description": "Ďalšie doplňujúce info k novovytvorenému záznamu."
+                    },
+                    "state": {
+                        "type": "integer",
+                        "description": "Stav záznamu po spracovaní požiadavky (napr. pri novo vytvorenom zázname 'Created').",
+                        "oneOf": [
+                            {
+                                "const": 0,
+                                "title": "Uknown - neznámy stav."
+                            },
+                            {
+                                "const": 1,
+                                "title": "Created - záznam bol vytvorený."
+                            },
+                            {
+                                "const": 2,
+                                "title": "Modified - záznam bol aktualizovaný."
+                            },
+                            {
+                                "const": 5,
+                                "title": "Deleted - záznam bol vymazaný."
+                            },
+                            {
+                                "const": 5,
+                                "title": "Errored - nejaká chyba pri spracovaní (bližší popis by mal byť dostupný v parametri 'Info')."
+                            },
+                            {
+                                "const": 5,
+                                "title": "NotFound - záznam nebol nájdený."
+                            }
+                        ]
                     }
                 }                
             },
@@ -2440,21 +2654,7 @@
                         "description": "Druh objektu výsledku určuje volaná API metóda."
                     }
                 }                
-            },
-            "SwaggerLoginDataArg" : {
-                "type": "object",
-                "description": "Pre prishlásenie sa k službe z tejto dokumentácie.",
-                "properties": {
-                    "UserName": {
-                        "type": "string",
-                        "description": "Meno používateľa."
-                    },
-                    "Password": {
-                        "type": "string",
-                        "description": "Heslo."
-                    }
-                }                
-            }
+            }            
         }
     }
 }
