@@ -7,7 +7,7 @@ window.onload = function () {
     window.userData = "";
 
     window.ui = SwaggerUIBundle({
-        url: "http://192.168.16.11:8084/openapi_oberon_web_gen1_hotel.json",
+        url: "https://raw.githubusercontent.com/morfirk/oberon_web_api/refs/heads/main/openapi_oberon_web_gen1_hotel.json",
         //url: dataPath,
         //spec: window.jsonData,
         dom_id: '#swagger-ui',
