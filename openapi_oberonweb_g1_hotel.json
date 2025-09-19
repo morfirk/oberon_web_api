@@ -2103,8 +2103,9 @@
                 "type": "object",
                 "description": "Obsahuje údaje o osobe, hosťovi.",
                 "required": [
-                    "Room_Occupy_Percento",
-                    "OccupyDays"
+                    "Name",
+                    "FamilyName",
+                    "DateOfBirth"
                 ],
                 "properties": {                    
                     "IDNum": {
@@ -2114,7 +2115,7 @@
                     },
                     "DocumentIdentificationNumber": {
                         "type": "string",
-                        "description": "Číslo dokladu totožnosti."
+                        "description": "Číslo dokladu totožnosti (povinné ak má viac ako 15 rokov). Ak nie je známa hodnota je možné zadať 'neznáme'."
                     },
                     "Name": {
                         "type": "string",

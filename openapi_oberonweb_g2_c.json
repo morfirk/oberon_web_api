@@ -56,25 +56,14 @@
         }
     ],
     "paths": {
-        "/v1/system/poll?timeout={timeout}": {
+        "/v1/system/poll": {
             "post": {
                 "tags": [
                     "Poll"
                 ],                
                 "operationId": "systemPoll",
                 "summary": "Zaslanie požiadavky na určtú činnosť webovej služby - v odpovedi vráti timeout, alebo info o konkrétnej udalosti, ktorá nastala.",
-                "parameters": [
-                    {
-                        "name": "timeout",
-                        "description": "",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "number",
-                            "format": "int32"
-                        }
-                    }
-                ],
+                "parameters": [],
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -344,6 +333,12 @@
                         "type": "number",
                         "format": "int32",
                         "description": "Počítadlo od ktorého sú vrátené aktualizované udalosti."   
+                    },
+                    "PollTimeout": {
+                        "type": "number",
+                        "format": "int32",
+                        "description": "Čas (v sekundách) po ktorý má byť držané spojenie, ak nenastane žiadna udalosť.",
+                        "example": 10
                     }
                 }
             },

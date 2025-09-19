@@ -9,7 +9,7 @@ window.onload = function () {
     window.ui = SwaggerUIBundle({
         urls: [ 
             { url: window.location.origin + "/openapi_oberonweb_g1_hotel.json", name: "Hotelová recepcia" },
-            { url: window.location.origin + "/openapi_oberonweb_g1_stock.json", name: "Skladová evidencia" }
+            { url: window.location.origin + "/openapi_oberonweb_g1_v1_hotel.json", name: "Hotelová recepcia V1" }
          ],
         dom_id: '#swagger-ui',
         deepLinking: true,
