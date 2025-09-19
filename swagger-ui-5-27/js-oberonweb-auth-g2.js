@@ -17,12 +17,14 @@
         };
         
         eModule.apiAuthenticate = function(userName, password) {            
-            let param = { username: userName };
+            //let param = { username: userName };
+            let param = { userName: userName };
             if(!eModule.controls.servers) {
                 eModule.controls.servers = document.querySelector('.servers select');
             }
             var url = eModule.getUrl();
-            eModule.apiCall(url + '/GetLoginSalt', param, eModule.evhLoginSalt);
+            //eModule.apiCall(url + '/GetLoginSalt', param, eModule.evhLoginSalt); // G1
+            eModule.apiCall(url + '/v1/user/login/salt', param, eModule.evhLoginSalt); //G2
             if ( ! window.loginSalt ) {
                 return false;
             }
@@ -31,8 +33,10 @@
             if(password && password.length > 0) pass += password;
             pass = sha1(pass);
 
-            param = { loginData: { UserName: userName, Password: pass, LoginTag: 'OBERONWeb' } };
-            eModule.apiCall(url + '/LoginUserEx', param, eModule.evhLoginEx);
+            //param = { loginData: { UserName: userName, Password: pass, LoginTag: 'OBERONWeb' } }; //G1
+            param = { userLoginArg: { UserName: userName, Password: pass, LoginTag: 'OBERONWeb' } };    //G2        
+            //eModule.apiCall(url + '/LoginUserEx', param, eModule.evhLoginEx);
+            eModule.apiCall(url + '/v1/user/login', param, eModule.evhLoginEx);
             if ( ! window.userData ) {
                 return false;
             }
@@ -67,7 +71,8 @@
         eModule.evhLoginEx = function(xhr) {
             let res = eModule.dataResult(xhr);
             if(res.result == true) {
-                window.userData = res.data;
+                //window.userData = res.data; //G1
+                window.userData = res.data.GUID; // G2
             }
 
         }

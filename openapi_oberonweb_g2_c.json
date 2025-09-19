@@ -1,0 +1,559 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "OBERON Web API G1 (modul Hotelová recepcia)",
+        "description": "Popis API pre modul Hotelová recepcia v OBERON Web API G1. Mandatory attributes are marked with '*' in the 'Schema' documentation section.",
+        "contact": {
+            "name": "EXALOGIC",
+            "url": "https://exalogic.sk/homepage/kontakty/",
+            "email": "exalogic@exalogic.sk",
+            "x-teams": "N/A",
+            "x-url": "https://exalogic.sk/homepage/kontakty/",
+            "x-email": "exalogic@exalogic.sk"
+        },
+        "version": "1.0",
+        "x-scope": "public",
+        "x-technologies": [
+            ".NET",
+            "MariaDB"
+        ],
+        "x-keywords": [
+            "e-pos",
+            "warehouse",
+            "stock",
+            "hotel",
+            "pos",
+            "cash register",
+            "invoicing"
+        ],
+        "x-related-masterdata": "article",
+        "x-solution": "OBERONWebG1Hotel",
+        "x-git-url": ""
+    },
+    "servers": [
+        {
+            "url": "https://192.168.16.27:23030/",
+            "description": "Chaim"
+        },
+        {
+            "url": "https://test-backend.lambdatest.com/",
+            "description": "SHA-1 calculator"
+        }
+    ],
+    "security": [
+        {
+            "UserTokenAuth": []
+        }
+    ],
+    "tags": [
+        {
+            "name": "Rezervácie",
+            "description": "Metódy pre práciu s rezerváciami"
+        },
+        {
+            "name": "System",
+            "description": "Systémové metódy API."
+        }
+    ],
+    "paths": {
+        "/v1/system/poll?timeout={timeout}": {
+            "post": {
+                "tags": [
+                    "Poll"
+                ],                
+                "operationId": "systemPoll",
+                "summary": "Zaslanie požiadavky na určtú činnosť webovej služby - v odpovedi vráti timeout, alebo info o konkrétnej udalosti, ktorá nastala.",
+                "parameters": [
+                    {
+                        "name": "timeout",
+                        "description": "",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",                                
+                                "properties" : {
+                                    "pollFilter": {
+                                        "type": "object",
+                                        "$ref": "#/components/schemas/PollFilterArg"
+                                    }
+                                }                                
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Požiadavka bola spracovaná API. Výsledok spracovania a prípadné chyby sa nachádzajú v datach.",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PollResult"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },        
+        
+
+        "/ping": {
+            "get": {
+                "tags": [
+                    "System"
+                ],
+                "operationId": "systemPing",
+                "summary": "Overenie dostupnosti služby (vracia IP adresu požiadavky).",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string",                                    
+                                    "example": "127.0.0.1"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/user/login/salt": {
+            "post": {
+                "tags": [
+                    "System"
+                ],
+                "operationId": "loginSalt",
+                "summary": "Vráti tzv. SALT, ktorý je používaný pri hashovaní hesla pri prihlásení používateľa.",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "userName"
+                                ],
+                                "properties": {
+                                    "userName": {
+                                        "type": "string",
+                                        "description": "Meno používateľa pre ktorý sa salt generuje a následne pri ďalšom prihlásení (metóda LoginUser) použije.",
+                                        "example": "admin"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ResultValueOf"
+                                        },
+                                        {                        
+                                            "properties": {
+                                                "data": {
+                                                    "type": "string",
+                                                    "description": "Obsahuje text saltu pre použitie pri prihlásení.",
+                                                    "example": "SGQ4ASMBKJT8QCD7QFBU5OMX4DDCZHFQW96CKYKL"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/dev-tools/calculate-sha-1": {
+            "get": {
+                "tags": [
+                    "System"
+                ],
+                "operationId": "calculateSha1",
+                "summary": "Vráti SHA1 hash, ktorý je možné použiť ako heslo.",
+                "parameters": [
+                    {
+                        "name": "input-str",
+                        "description": "",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "userName"
+                                ],
+                                "properties": {
+                                    "status": {
+                                        "type": "bool",
+                                        "description": "Stav spracovania požiadavky.",
+                                        "example": true
+                                    },
+                                    "data": {
+                                        "type": "string",
+                                        "description": "Vypočítaný.",
+                                        "example": "85eb1d491630139c2f3c1846d48789806e285ccb"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ResultValueOf"
+                                        },
+                                        {                        
+                                            "properties": {
+                                                "data": {
+                                                    "type": "string",
+                                                    "description": "Obsahuje text saltu pre použitie pri prihlásení.",
+                                                    "example": "SGQ4ASMBKJT8QCD7QFBU5OMX4DDCZHFQW96CKYKL"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/user/login": {
+            "post": {
+                "tags": [
+                    "System"
+                ],
+                "operationId": "loginUser",
+                "summary": "Prihlásenie používateľa.",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "userLoginArg" : {
+                                        "type": "object",
+                                        "description": "Údaje pre prihlásenie používateľa.",
+                                        "$ref": "#/components/schemas/LoginDataArg"                                        
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ResultValueOf"
+                                        },
+                                        {                        
+                                            "properties": {
+                                                "data": {
+                                                    "type": "string",
+                                                    "description": "Neobsahuje žiadny text."
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "UserTokenAuth" :{
+                "type": "apiKey",                
+                "in": "header",
+                "name": "userData"                
+            }
+        },
+        "schemas": { 
+            
+            "PollFilterArg": {
+                "type": "object",
+                "description": "Filter ktorý definuje typy udalostí a klientov na ktoré má reagovať a informovať čakajúceho klienta.",
+                "required": [
+                    "Sources",
+                    "Types"
+                ],
+                "properties": {
+                    "Sources": {
+                        "type": "array",
+                        "description": "Identifikátor zdrojov udalosti na ktoré má čakať.",
+                        "example": "[ \"Zákaznícky displej\" ]",
+                        "items": { 
+                            "type": "string"
+                        }
+                    },
+                    "Types": {
+                        "type": "array",
+                        "description": "Typy udalostí, na ktoré čaká.",
+                        "example": "[ \"CUSTOMERDISPLAY\" ]",
+                        "items": { 
+                            "type": "string"
+                        }
+                    },
+                    "PollIdLast": {
+                        "type": "number",
+                        "format": "int32",
+                        "description": "Počítadlo od ktorého sú vrátené aktualizované udalosti."   
+                    }
+                }
+            },
+            
+            "PollItem": {
+                "type": "object",
+                "description": "Informácia o jednom Poll Item. Obsahuje informáciu o type udalosti a ID klienta, ktorý poll vygeneroval.",
+                "properties": {
+                    "Source": {
+                        "type": "string",
+                        "description": "Identifikátor zdroja údajov. Zadáva sa textová hodnota, napr. môže to byť pomenovanie zákazníckeho displeja v zozname zariadení, podľa ktorého klienti webovej služby čakajú v polle na dané dáta (ich zmenu).",
+                        "example": ""
+                    },
+                    "Types": {
+                        "type": "string",
+                        "description": "Typ udalosti - zadáva sa konkrétna textová hodnota podľa dokumentácie k danej webovej službe, napr. CUSTOMERDISPLAY.",
+                        "example": ""
+                    }
+                }
+            },
+
+            "PollData": {
+                "type": "object",
+                "description": "Vracia zmenené/aktualizované eventy klientovi ktorý čaká/Poll-uje zmeny.",
+                "properties": {
+                    "ItemIdLast": {
+                        "type": "number",
+                        "format": "int32",
+                        "description": "Načítaný posledný event pre nové volanie čakania na nové eventy."   
+                    },
+                    "PollItems": {
+                        "type": "array",
+                        "description": "Zoznam načítaných položiek.",
+                        "items": {
+                            "$ref": "#/components/schemas/PollItem"
+                        }
+                    }
+                }
+            },
+
+            "PollResult": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ResultValueOf"
+                    },
+                    {                        
+                        "properties": {
+                            "data": {
+                                "description": "Vracia zmenené/aktualizované eventy klientovi ktorý čaká/Poll-uje zmeny.",
+                                "$ref": "#/components/schemas/PollData"
+                            }
+                        }
+                    }
+                ]
+            },
+
+
+
+            "LoginDataArg" : {
+                "type": "object",
+                "description": "Spravidla sa používa v návratovej hodnote 'ResultValueOf' vo vlastnosti Data (Data As RecordBaseInfo). Je využívaná hlavne ako časť návratovej hodnoty pri metódach, ktoré vytvárajú nové záznamy - po vytvorení záznamu sa vracia jeho jednoznačný identifikátor a napr. číslo dokladu.",
+                "properties": {
+                    "UserName": {
+                        "type": "string",
+                        "description": "Meno používateľa.",
+                        "example": "admin"
+                    },
+                    "Password": {
+                        "type": "string",
+                        "description": "Hash hesla (typu SHA-1), prípadne hash hesla obohatený o SALT (k salt-u sa pripojí heslo a následne sa vytvorí hash, salt je možné získať metódou GetLoginSalt). V odôvodnených prípadoch je možné zasielať heslo aj ako čistý text, znižuje to však bezpečnosť webovej služby (umožňuje útočníkovi získať heslo - záleží však aj na nastavení spôsobu zabezpečenia webovej služby)."
+                    },
+                    "LoginTag": {
+                        "type": "string",
+                        "description": "Ľubovoľná textová hodnota - danú hodnotu si webová služba uloží. Tým je možné napr. overiť zoznam pripojených externých zariadení do webovej služby.",
+                        "example": "Swagger-app"
+                    },
+                    "PasswordType": {
+                        "type": "number",
+                        "format": "int32",
+                        "example": 1,
+                        "oneOf": [
+                            {
+                                "const": 0,
+                                "title": "Standard /0/",
+                                "description": "Pre overenie sa používa štandardné heslo zo systému OBERON. Tu je pri prihlásení potrebné poznať a zadať aj prihlasovacie meno."
+                            },
+                            {
+                                "const": 1,
+                                "title": "PIN /1/",
+                                "description": "Pre overenie sa používa PIN. V OBERON-e sa zadáva do poľa Kód prístupového kľúča."
+                            },
+                            {
+                                "const": 9,
+                                "title": "Everyone /9/",
+                                "description": "Do webovej služby sa môže prihlásiť ktokoľvek - neoveruje sa žiadne heslo. Webová služba musí byť nastavená tak aby umožnila použitie tohoto typu prihlásenia. Používa sa len v uričích funkcionalitách ako napr. v režime hosť v reštaurácii, slúži na identifikáciu otvoreného účtu na stole"
+                            }
+                        ]
+                    },
+                    "ApplicationVersion": {
+                        "type": "string",
+                        "description": "Číslo verzie aplikácie, ktorá sa pripája k webovej službe (odporúčame vo formáte x.x.x)."
+                    },
+                    "ApplicationName": {
+                        "type": "string",
+                        "description": "Pomenovanie aplikácie, ktorá sa pripája k webovej službe."
+                    },
+                    "LanguageCode": {
+                        "type": "string",
+                        "description" : "Dvojmiestny kód jazyka podľa normy ISO-639-1 pre preklad údajov, ktorých preklad aplikácia umožňuje napr. názvy skladových položiek, doplňujúce texty, skupiny (kategórie) v jedálnom lístku a podobne."
+                    }
+                }                
+            },
+            "LoginDataResult" : {
+                "type": "object",
+                "description": "Spravidla sa používa v návratovej hodnote 'ResultValueOf' vo vlastnosti Data (Data As RecordBaseInfo). Je využívaná hlavne ako časť návratovej hodnoty pri metódach, ktoré vytvárajú nové záznamy - po vytvorení záznamu sa vracia jeho jednoznačný identifikátor a napr. číslo dokladu.",
+                "properties": {
+                    "UserName": {
+                        "type": "string",
+                        "description": "Meno používateľa.",
+                        "example": "admin"
+                    },
+                    "Password": {
+                        "type": "string",
+                        "description": "Hash hesla (typu SHA-1), prípadne hash hesla obohatený o SALT (k salt-u sa pripojí heslo a následne sa vytvorí hash, salt je možné získať metódou GetLoginSalt). V odôvodnených prípadoch je možné zasielať heslo aj ako čistý text, znižuje to však bezpečnosť webovej služby (umožňuje útočníkovi získať heslo - záleží však aj na nastavení spôsobu zabezpečenia webovej služby)."
+                    },
+                    "LoginTag": {
+                        "type": "string",
+                        "description": "Ľubovoľná textová hodnota - danú hodnotu si webová služba uloží. Tým je možné napr. overiť zoznam pripojených externých zariadení do webovej služby.",
+                        "example": "Swagger-app"
+                    }
+                }                
+            },
+
+
+            "RecordBaseInfo" : {
+                "type": "object",
+                "description": "Spravidla sa používa v návratovej hodnote 'ResultValueOf' vo vlastnosti Data (Data As RecordBaseInfo). Je využívaná hlavne ako časť návratovej hodnoty pri metódach, ktoré vytvárajú nové záznamy - po vytvorení záznamu sa vracia jeho jednoznačný identifikátor a napr. číslo dokladu.",
+                "properties": {
+                    "IDNum": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor nového záznamu."
+                    },
+                    "GUID": {
+                        "type": "string",
+                        "description": "Jednoznačný identifikátor typu GUID nového záznamu, ak evidencia podporuje daný typ identifikátora."
+                    },
+                    "Value": {
+                        "type": "string",
+                        "description": "Spravidla číslo nového záznamu, napr. pri objednávke číslo novej vytvorenej objednávky."
+                    },
+                    "Info": {
+                        "type": "string",
+                        "description": "Ďalšie doplňujúce info k novovytvorenému záznamu."
+                    },
+                    "state": {
+                        "type": "integer",
+                        "description": "Stav záznamu po spracovaní požiadavky (napr. pri novo vytvorenom zázname 'Created').",
+                        "oneOf": [
+                            {
+                                "const": 0,
+                                "title": "Uknown - neznámy stav."
+                            },
+                            {
+                                "const": 1,
+                                "title": "Created - záznam bol vytvorený."
+                            },
+                            {
+                                "const": 2,
+                                "title": "Modified - záznam bol aktualizovaný."
+                            },
+                            {
+                                "const": 5,
+                                "title": "Deleted - záznam bol vymazaný."
+                            },
+                            {
+                                "const": 5,
+                                "title": "Errored - nejaká chyba pri spracovaní (bližší popis by mal byť dostupný v parametri 'Info')."
+                            },
+                            {
+                                "const": 5,
+                                "title": "NotFound - záznam nebol nájdený."
+                            }
+                        ]
+                    }
+                }                
+            },
+            "ResultValueOf" : {
+                "type": "object",
+                "description": "Základný objekt výsledku volaných metód API obsahuje údaje s pracovaní. Samotné výsledné data sa nachádzajú v parametri 'data', ktorého typ určruje volaná API metóda. Objekt je dedený vo výsledných objektov metód.",
+                "properties": {
+                    "result": {
+                        "type": "bool",
+                        "description": "Výsledok volanej metódy, result = TRUE - metóda bola úspešná, result = FALSE - metóda bola neúspešná.",
+                        "example": false
+                    },
+                    "errNumber": {
+                        "type": "integer",
+                        "description": "Kód chyby, vrátený API prípadne niektorou z interne volaných funkcií."
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Popis chyby."
+                    },
+                    "data": {
+                        "type": "object",
+                        "description": "Druh objektu výsledku určuje volaná API metóda."
+                    }
+                }                
+            }            
+        }
+    }
+}

@@ -1,8 +1,8 @@
 {
     "openapi": "3.1.0",
     "info": {
-        "title": "OBERON Web API Gen.1 (modul Hotelová recepcia)",
-        "description": "REST API for OBERON aplication webservices. Mandatory attributes are marked with '*' in the 'Schema' documentation section.",
+        "title": "OBERON Web API G1 (modul Hotelová recepcia)",
+        "description": "Popis API pre modul Hotelová recepcia v OBERON Web API G1. Mandatory attributes are marked with '*' in the 'Schema' documentation section.",
         "contact": {
             "name": "EXALOGIC",
             "url": "https://exalogic.sk/homepage/kontakty/",
@@ -32,12 +32,8 @@
     },
     "servers": [
         {
-            "url": "http://localhost:21006",
+            "url": "[OBERON_API_URL]",
             "description": "Generated server url"
-        },
-        {
-            "url": "http://192.168.16.11:21006",
-            "description": "MyPC"
         }
     ],
     "security": [
@@ -47,19 +43,23 @@
     ],
     "tags": [
         {
+            "name": "Rezervácie",
+            "description": "Metódy pre práciu s rezerváciami"
+        },
+        {
             "name": "Hotel",
-            "description": "Metódy pre komunikáciu s modulom Hotelová recepcia"
+            "description": "Metódy pre práciu s hotelom"
         },
         {
             "name": "System",
-            "description": "Systémové metódy API napr. Autentifikácia a pod."
+            "description": "Systémové metódy API."
         }
     ],
     "paths": {
         "/v1/hotel/reservation/get": {
             "post": {
                 "tags": [
-                    "Hotel"
+                    "Rezervácie"
                 ],                
                 "operationId": "hotelReservationGet",
                 "summary": "Načítanie údajov konkrétnej rezervácie ubytovania z evidencie v module Hotelová recepcia.",
@@ -88,13 +88,49 @@
                     }
                 }
             }
+        },        
+        "/v1/hotel/reservation/guest/delete" : {
+            "post": {
+                "tags": [
+                    "Rezervácie"
+                ],                
+                "operationId": "hotelGuestsDelete",
+                "summary": "Vymazanie hostí z rezervácie ubytovania hotelovej recepcie. Údaje hostí je možné získať pomocou metódy 'GetHotel_Guests'.",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "$ref": "#/components/schemas/HotelGuestsDeleteArg"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Požiadavka bola spracovaná API. Výsledok spracovania a prípadné chyby sa nachádzajú v datach.",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/HotelGuestsSetResult"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         },
+
+
         "/GetHotel_RoomReservation": {
             "post": {
                 "tags": [
                     "Hotel"
                 ],                
-                "operationId": "getHotelRoomReservation",
+                "operationId": "hotelReservationOld",
                 "summary": "Načítanie (vyhľadanie) údajov rezervácie ubytovania z evidencie v module Hotelová recepcia.",
                 "parameters": [],
                 "requestBody": {
@@ -302,40 +338,6 @@
                                         "$ref": "#/components/schemas/HotelGuestsSetArg"
                                     }
                                 }                                
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "200": {
-                        "description": "Požiadavka bola spracovaná API. Výsledok spracovania a prípadné chyby sa nachádzajú v datach.",
-                        "content": {
-                            "*/*": {
-                                "schema": {
-                                    "type": "object",
-                                    "$ref": "#/components/schemas/HotelGuestsSetResult"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/hotel/reservation/guest/delete" : {
-            "post": {
-                "tags": [
-                    "Hotel"
-                ],                
-                "operationId": "hotelGuestsDelete",
-                "summary": "Vymazanie hostí z rezervácie ubytovania hotelovej recepcie. Údaje hostí je možné získať pomocou metódy 'GetHotel_Guests'.",
-                "parameters": [],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "$ref": "#/components/schemas/HotelGuestsDeleteArg"
                             }
                         }
                     },
@@ -2575,6 +2577,68 @@
                     "LoginTag": {
                         "type": "string",
                         "description": "Ľubovoľná textová hodnota - danú hodnotu si webová služba uloží. Tým je možné napr. overiť zoznam pripojených externých zariadení do webovej služby."
+                    }
+                }                
+            },
+
+
+            "HotelReservationBusinessPartner": {
+                "type": "object",
+                "description": "Údaje obchodného partnera v rezervácii hotela.",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BusinessPartnerBase"
+                    },
+                    {                        
+                        "properties": {
+                            "IdentificationNumber": {
+                                "type": "string",
+                                "description": "Identifikačné číslo partnera."
+                            }
+                        }
+                    }
+                ]                
+            },
+
+
+
+            "BusinessPartnerBase" : {
+                "type": "object",
+                "description": "Základný objekt obchodného partnera.",
+                "required": [],
+                "properties": {
+                    "Name": {
+                        "type": "string",
+                        "description": "Názov obchodného partnera."
+                    },
+                    "Address": {
+                        "type": "object",                                
+                        "description": "Adresa obchodného partnera.",
+                        "$ref": "#/components/schemas/Address"                        
+                    }
+                }                
+            },
+
+            "Address" : {
+                "type": "object",
+                "description": "Základný objekt adresy.",
+                "required": [],
+                "properties": {
+                    "Street": {
+                        "type": "string",
+                        "description": "Ulica."
+                    },
+                    "City": {
+                        "type": "string",
+                        "description": "Mesto/Obec."
+                    },
+                    "PostalCode": {
+                        "type": "string",
+                        "description": "PSČ/ZIP, poštové smerovacie číslo."
+                    },
+                    "Country": {
+                        "type": "string",
+                        "description": "Krajina."
                     }
                 }                
             },

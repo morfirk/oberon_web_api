@@ -1,0 +1,2265 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "OBERON Web API G1 (modul Hotelová recepcia)",
+        "description": "Popis API s implementáciou verzií pre modul Hotelová recepcia v OBERON Web API G1. Mandatory attributes are marked with '*' in the 'Schema' documentation section.",
+        "contact": {
+            "name": "EXALOGIC",
+            "url": "https://exalogic.sk/homepage/kontakty/",
+            "email": "exalogic@exalogic.sk",
+            "x-teams": "N/A",
+            "x-url": "https://exalogic.sk/homepage/kontakty/",
+            "x-email": "exalogic@exalogic.sk"
+        },
+        "version": "1.1",
+        "x-scope": "public",
+        "x-technologies": [
+            ".NET",
+            "MariaDB"
+        ],
+        "x-keywords": [
+            "e-pos",
+            "warehouse",
+            "stock",
+            "hotel",
+            "pos",
+            "cash register",
+            "invoicing"
+        ],
+        "x-related-masterdata": "article",
+        "x-solution": "OBERONWebG1Hotel",
+        "x-git-url": ""
+    },
+    "servers": [
+        {
+            "url": "[OBERON_API_URL]",
+            "description": "Generated server url"
+        }
+    ],
+    "security": [
+        {
+            "UserTokenAuth": []
+        }
+    ],
+    "tags": [
+        {
+            "name": "Kniha rezervácií",
+            "description": "Metódy pre práciu s rezerváciami"
+        },
+        {
+            "name": "Hotel",
+            "description": "Metódy pre práciu s hotelom"
+        },
+        {
+            "name": "System",
+            "description": "Systémové metódy API."
+        }
+    ],
+    "paths": {
+        "/v1/hotel/reservation/get": {
+            "post": {
+                "tags": [
+                    "Kniha rezervácií"
+                ],                
+                "operationId": "hotelReservationGet",
+                "summary": "Načítanie údajov konkrétnej rezervácie ubytovania z knihy rezervácií.",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",                                
+                                "$ref": "#/components/schemas/HotelReservationGetArg"                                
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Požiadavka bola spracovaná API. Výsledok spracovania a prípadné chyby sa nachádzajú v datach.",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HotelReservationGetResult"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/hotel/reservation/add": {
+            "post": {
+                "tags": [
+                    "Kniha rezervácií"
+                ],                
+                "operationId": "hotelReservationAdd",
+                "summary": "Vytvorenie novej rezervácie hotela v knihe rezervácií.",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",                                
+                                "$ref": "#/components/schemas/HotelReservationAddArg"                                
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Požiadavka bola spracovaná API. Výsledok spracovania a prípadné chyby sa nachádzajú v datach.",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HotelReservationAddResult"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/hotel/reservation/update": {
+            "post": {
+                "tags": [
+                    "Kniha rezervácií"
+                ],                
+                "operationId": "hotelReservationUpdate",
+                "summary": "Aktualizovanie údajov rezervácie hotela v knihe rezervácií.",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",                                
+                                "$ref": "#/components/schemas/HotelReservationUpdateArg"                                
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Požiadavka bola spracovaná API. Výsledok spracovania a prípadné chyby sa nachádzajú v datach.",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HotelReservationUpdateResult"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }, 
+        
+        
+
+        "/v1/hotel/reservation/guest/delete" : {
+            "post": {
+                "tags": [
+                    "Rezervácie"
+                ],                
+                "operationId": "hotelGuestsDelete",
+                "summary": "Vymazanie hostí z rezervácie ubytovania hotelovej recepcie. Údaje hostí je možné získať pomocou metódy 'GetHotel_Guests'.",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "$ref": "#/components/schemas/HotelGuestsDeleteArg"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Požiadavka bola spracovaná API. Výsledok spracovania a prípadné chyby sa nachádzajú v datach.",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/HotelGuestsSetResult"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    },
+    "components": {
+        "securitySchemes": {
+            "UserTokenAuth" :{
+                "type": "apiKey",                
+                "in": "header",
+                "name": "userData"                
+            }
+        },
+        "schemas": { 
+
+            "HotelReservationGetArg": {
+                "description": "Argument funkcie pre načítanie (vyhľadanie) údajov existujúcej rezervácie ubytovania.",
+                "type": "object",
+                "required": [
+                    "FindBy",
+                    "FindByValue"
+                ],                
+                "properties": {
+                    "FindBy": {
+                        "type": "integer",
+                        "description": "Určuje druh hodnoty, podľa ktorej má byť vyhľadaná (načítaná) rezervácia. Hodnota sa nachádza v parametri 'FindByValue'.",
+                        "example": 1,
+                        "oneOf": [
+                            {
+                                "const": 0,
+                                "title": "IDNum",
+                                "description": "Jedinečný identifikátor v systéme OBERON používaný interne. Vyhľadanie rezervácie podľa interného čísla rezervácie je možné len pri službe, ktorá má nastavenie prihlasovania používateľov systému OBERON. Dôvodom je bezpečnosť - obmedzenie 'dolovania' údajov."
+                            },
+                            {
+                                "const": 1,
+                                "title": "GUID",
+                                "description": "Jedinečný verejný identifikátor záznamu rezervácie v systéme OBERON (náhodný reťazec). Môže sa napr. použiť ako direct link, kedy sa zašle hosťovi e-mailom a on môže prostredníctvom webovej aplikácie (formulára) zadať osobné údaje k rezervácii. Pri načítaní rezervácie pomocou GUID webová služba môže pracovať aj v režime bez autentifikácie."
+                            },
+                            {
+                                "const": 2,
+                                "title": "ReservationNumber",
+                                "description": "Číslo rezervácie v systéme OBERON. Vyhľadanie rezervácie podľa interného čísla rezervácie je možné len pri službe, ktorá má nastavenie prihlasovania používateľov systému OBERON. Dôvodom je bezpečnosť - obmedzenie 'dolovania' údajov."
+                            },
+                            {
+                                "const": 5,
+                                "title": "ExternalReservationNumber",
+                                "description": "Externé číslo rezervácie pochádzajúce z externého systému napr. 'Booking.com' (používateľovi je toto číslo prístupné vo formulári rezervácie). Vyhľadanie rezervácie podľa externého čísla rezervácie je možné len pri službe, ktorá má nastavenie prihlasovania používateľov systému OBERON. Dôvodom je bezpečnosť - obmedzenie 'dolovania' údajov."
+                            }
+                        ]
+                    },
+                    "FindByValue": {
+                        "type": "string",
+                        "description": "Hodnota pre načítanie (vyhľadanie) rezervácie ubytovania - typ hodnoty určuje parameter 'FindBy'.",
+                        "example": "e2ae6143-cbcf-4cfa-86e8-98a23d733bfe"
+                    }
+                }
+            },
+            "HotelReservationGetResult": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ResultValueOf"
+                    },
+                    {                        
+                        "properties": {
+                            "data": {
+                                "$ref": "#/components/schemas/HotelReservation"
+                            }
+                        }
+                    }
+                ]
+            },
+                        
+            "HotelRoomReservationArg": {
+                "required": [
+                    "HotelReservation"
+                ],
+                "description": "Argument funkcie funkcie pre vytvorenie rezervácie ubytovania.",
+                "type": "object",
+                "properties": {
+                    "PriceCategoryGuestName": {
+                        "type": "string",
+                        "description": "Názov cenovej kategórie hosťa, ktorá môže byť použitá pri kalkulácii ceny ubytovania. Ak nie je zadaná, bude použitá predvolená cenová kategória hosťa.",
+                        "example": "Základná cena"
+                    },
+                    "PriceCalculateAccommodation": {
+                        "type": "bool",
+                        "description": "TRUE - pri zápise novej rezervácie sa automaticky vytvorí cenová kalkulácia ubytovania. \n FALSE - pri zápise novej rezervácie sa nebude vytvárať cenová kalkulácia rezervácie. Cenová kalkulácia môže byť zadaná v parametri 'PriceItems'.",
+                        "example": true
+                    },
+                    "PriceCalculateTouristTax": {
+                        "type": "bool",
+                        "description": "TRUE - pri zápise novej rezervácie sa automaticky vytvorí aj cenová kalkulácia dane z ubytovania. Tu sa posudzujú rezerované osoby, veky detí a podobne. \n FALSE - pri zápise novej rezervácie sa nebude vytvárať cenová kalkulácia dane z ubytovania. Cenová kalkulácia môže byť zadaná v parametri 'PriceItems'.",
+                        "example": true
+                    },
+                    "PriceCalculateServices": {
+                        "type": "bool",
+                        "description": "TRUE - pri zápise novej rezervácie sa automaticky vytvorí aj cenová kalkulácia základných služieb (napr. raňajky). Tie však musia byť definované v zozname služieb rezervácie. \n FALSE - pri zápise novej rezervácie sa nebude vytvárať cenová kalkulácia základných služieb. Cenová kalkulácia môže byť zadaná v parametri 'PriceItems'.",
+                        "example": true
+                    },
+                    "PriceItems": {
+                        "type": "array",
+                        "description": "Zoznam položiek cenovej kalkulácie. Zadané položky sa zapíšu do cenovej kalkulácie. V prípade, ak sa má cenová kalkulácia vytvárať automaticky ('PriceCalculateAccommodation' = true), tu zadané položky sa pridajú ako ďalšie položky cenovej kalkulácie.",
+                        "items": {
+                            "$ref": "#/components/schemas/HotelReservationPriceItem"
+                        }
+                    },
+                    "HotelReservation": {
+                        "type": "object",
+                        "description": "Údaje požadovanej rezervácie ubytovania.",
+                        "$ref": "#/components/schemas/HotelReservation"
+                    }
+                }
+            },           
+            "HotelRoomReservationResult": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ResultValueOf"
+                    },
+                    {                        
+                        "properties": {
+                            "data": {
+                                "description": "dd",
+                                "$ref": "#/components/schemas/RecordBaseInfo"
+                            }
+                        }
+                    }
+                ]
+            },
+            "HotelRoomReservationAvailabilityArg": {
+                "description": "Zistí informácie o dostupnosti a cene daného termínu rezervácie. V rezervácii môže byť aj viac izieb, prípadne sú zadané len typy izieb. Môže vracať aj kompletnú cenovú kalkuláciu.",
+                "type": "object",
+                "required": [
+                    "PriceCalculate",
+                    "HotelReservation"
+                ],                
+                "properties": {
+                    "PriceCalculate": {
+                        "type": "bool",
+                        "description": "Príznak kalkulácie ceny pri overení dostupnosti voľnej izby.",
+                        "example": true
+                    },
+                    "PriceCategoryGuestName": {
+                        "type": "string",
+                        "description": "Ak sa má pri overení dostupnosti izby (teda rezervácie) počítať aj cenová kalkulácia 'PriceCalculate', tu je možné zadať názov cenovej kategórie hosťa, ktorá bude použitá pri výpočte ceny ubytovania. Ak nebude parameter zadaný, použije sa predvolená cenová kategória hosťa."
+                    },
+                    "RoomTypeAllowChange": {
+                        "type": "bool",
+                        "description": "Pri overení dostupnosti podľa typu izby (ak požadovaný typ nie je voľný) systém použije aj iný vhodný typ izby. Napríklad ak pri požiadavke o overenie dostupnosti 2+0 systém zistí plné obsadenie dvojlôžkových izieb, použije voľnú izbu typu 2+1 (teda aj s jedným prístelkom).",
+                        "example": true
+                    },
+                    "HotelReservation": {
+                        "type": "object",
+                        "description": "Rezervácia hotela pre, ktorú má byť vykonané overenie dostupnosti.",
+                        "$ref": "#/components/schemas/HotelReservation"
+                    }
+                } 
+            },
+            "HotelReservationAvailabilityResult": {
+                "description": "Zistí informácie o dostupnosti a cene daného termínu rezervácie. V rezervácii môže byť aj viac izieb, prípadne sú zadané len typy izieb. Môže vracať aj kompletnú cenovú kalkuláciu.",
+                "type": "object",
+                "required": [
+                    "PriceCalculate",
+                    "HotelReservation"
+                ],                
+                "properties": {
+                    "TermIsFree": {
+                        "type": "bool",
+                        "description": "TRUE - daný termín je voľný, t.j. všetky izby v danej rezervácii pre daný termín sú voľné - nie je na nich evidovaná iná rezervácia alebo ubytovanie, prípadne izba nie je zablokovaná (záznam v evidencii Správa údržby). Ak je izba voľná, je potrebné testovať aj príznak 'TermCanBeReserved'. \n FALSE - izba nie je voľná a nie je možné vykonať rezerváciu. Fyzicky je však možné rezerváciu zaslať (zapísať) - tu však vznikne Overbooking.",
+                        "example": true
+                    },
+                    "TermCanBeReserved": {
+                        "type": "bool",
+                        "description": "TRUE - daný termín vyhovuje pravidlám a reštrikciám cenotvorby, napr. minimálna dĺžka pobytu, správny deň príchodu/odchodu v týždni. Pri možnosť rezervovať daný termín je potrebné testovať najmä príznak 'TermIsFree', t.j. či je daný termín voľný. \n FALSE - daný termín nevyhovuje reštrikciám v cenotvorbe,  napr. príliš krátky pobyt, prípadne nepovolený deň príchodu v týždni. V hodnote 'TermCanBeReservedDescription' sa nachádza dôvod reštrikcií v cenotvorbe. Ak kalkuláciu ceny generuje externý systém, je možné tento príznak ignorovať a zapísať novú rezerváciu (záleží od spôsobu implementácie týchto API).",
+                        "example": true
+                    },
+                    "TermCanBeReservedDescription": {
+                        "type": "string",
+                        "description": "Obsahuje popis dôvodu (alebo dôvodov) reštrikcií (ak 'TermCanBeReserved' = false)."
+                    },
+                    "Price_Total": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Celková suma podľa cenovej kalkulácie pre danú rezerváciu. Jednotlivé položky sú dostupné v zozname 'PriceItems'."
+                    },
+                    "Price_Accommodation": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Celková cena za ubytovanie."
+                    },
+                    "Price_Food": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Celková cena za základné služby (napr. raňajky)."
+                    },
+                    "Price_Services": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Celková cena za iné služby (napr. prenájom kurtu)."
+                    },
+                    "Price_TouristTax": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Celková suma dane z ubytovania."
+                    },
+                    "AvailableRooms": {
+                        "type": "array",
+                        "description": "Zoznam dostupných izieb, ktoré sa môžu rezervovať (sú voľné) pre daný termín.",
+                        "items": {
+                            "$ref": "#/components/schemas/HotelReservationAvailabilityRoomInfo"
+                        }
+
+                    },
+                    "PriceItems": {
+                        "type": "array",
+                        "description": "Zoznam položiek výpočtu ceny (podrobná cenová kalkulácia).",
+                        "items": {
+                            "$ref": "#/components/schemas/HotelReservationPriceItem"
+                        }
+
+                    },
+                    "ValidationItems": {
+                        "type": "array",
+                        "description": "Dodatočný zoznam problémov, pre ktoré nie je možné vykonať zápis rezervácie. Zoznam môže obsahovať napr. problémy ako nemožnosť nástupou na ubytovanie vo vybraný deň, nedostatočne dlhý pobyt a pod.",
+                        "items": {
+                            "$ref": "#/components/schemas/HotelReservationAvailabilityValidationItem"
+                        }
+
+                    }
+                }
+            },
+
+            "HotelReservationStateSetArg": {
+                "description": "Parameter metódy pre nastavenie stavu hotelovej rezervácie.",
+                "type": "object",
+                "required": [
+                    "IDNum",
+                    "ReservationState"
+                ],                
+                "properties": {
+                    "IDNum": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor rezervácie (číslo), je možné vyčítať z rezervácie.",
+                        "example": 0
+                    },
+                    "ReservationState": {
+                        "type": "number",
+                        "description": "Stav rezervácie, ktorý má byť nastavený (napr. Nepotvrdená rezervácia, Potvrdená rezervácia).",
+                        "$ref": "#/components/schemas/HotelReservationStateEnum"
+                    },
+                    "PaymentAdvancePrice": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Suma zaplatenej zálohy za ubytovanie (hodnota sa uvádza vo východzej mene systému v nastavenia firmy).",
+                        "example": 100.0
+                    },
+                    "PaymentAdvanceDate": {
+                        "type": "string",
+                        "description": "Dátum úhrady zálohy (dátum vo formáte yyyy-MM-ddTHH:mm:ss) [údaj je povinný v prípade ak je zadaná suma zálohy].",
+                        "example": "2025-01-01T10:55:00"
+                    },
+                    "PaymentAdvanceBillNumber": {
+                        "type": "string",
+                        "description": "Číslo dokladu o zaplatení zálohy (napr. číslo bankového prevodu).",
+                        "example": "2025/10/101"
+                    },
+                    "PaymentAdvanceNotice": {
+                        "type": "string",
+                        "description": "Poznámka k zaplatenej zálohe (max. 255 znakov).",
+                        "example": "Záloha uhradená na bankový účet SK11......"
+                    }
+                }
+            },
+            "HotelReservationStateSetResult": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ResultValueOf"
+                    },
+                    {                        
+                        "properties": {
+                            "data": {
+                                "description": "Objekt obsahuje jednoznačný identifikátor zmenenej rezervácie a jej číslo. Vo vlastnosti 'Info' je uvedená prípadná poznámka k zmene stavu názov vytvorenej rezervácie.",
+                                "$ref": "#/components/schemas/RecordBaseInfo"
+                            }
+                        }
+                    }
+                ]
+            },
+
+            "HotelGuestsGetArg": {
+                "description": "Parameter pre načítanie osôb (hostí) konkrétneho ubytovania alebo rezervácie ubytovania, prípadne rezervácie služieb.",
+                "type": "object",
+                "required": [
+                    "ParentType",
+                    "GUID"
+                ],                
+                "properties": {
+                    "ParentType": {
+                        "type": "number",
+                        "description": "Evidencia, z ktorej sa majú údaje o hosťoch načítať.",
+                        "$ref": "#/components/schemas/HotelGuestsSetParentTypeEnum"
+                    },
+                    "GUID": {
+                        "type": "string",
+                        "description": "Jednoznačný identifikátor GUID rodiča (záznamu), ku ktorému sa osoby zapisujú, napr. jednoznačný identifikátor rezervácie. Identifikátor ako náhrada IDNumParent."
+                    }                    
+                }  
+            },
+            "HotelGuestsGetResult": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ResultValueOf"
+                    },
+                    {                        
+                        "properties": {
+                            "data": {
+                                "$ref": "#/components/schemas/HotelGuestsGetResultData"
+                            }
+                        }
+                    }
+                ]   
+            },            
+            "HotelGuestsSetArg": {
+                "description": "Parameter pre uloženie osôb (hostí) konkrétneho ubytovania alebo rezervácie ubytovania, prípadne rezervácie služieb.",
+                "type": "object",
+                "required": [
+                    "ParentType",
+                    "GUID",
+                    "Guests"
+                ],                
+                "properties": {
+                    "ParentType": {
+                        "type": "number",
+                        "description": "Evidencia, do ktorej sa majú údaje o hosťoch zapísať.",
+                        "$ref": "#/components/schemas/HotelGuestsSetParentTypeEnum"
+                    },
+                    "IDNumParent": {
+                        "type": "string",
+                        "description": "Jednoznačný identifikátor rodiča (záznamu), ku ktorému sa osoby zapisujú, napr. jednoznačný identifikátor rezervácie alebo ubytovania a podobne. Ak je zadaný GUID, táto hodnota sa nezadáva."
+                    },
+                    "GUID": {
+                        "type": "string",
+                        "description": "Jednoznačný identifikátor GUID rodiča (záznamu), ku ktorému sa osoby zapisujú, napr. jednoznačný identifikátor rezervácie. Identifikátor ako náhrada IDNumParent."
+                    },
+                    "Guests": {
+                        "type": "array",
+                        "description": "Zoznam hostí - obsahuje jednu alebo viac hodnôt (štruktúr Hotel_Guest).",
+                        "items": {
+                            "$ref": "#/components/schemas/HotelGuest"
+                        }
+                    }
+                }
+            },
+            "HotelGuestsSetParentTypeEnum": {
+                "type": "enum",
+                "description": "Určuje evidenciu, do ktorej sa majú údaje o hosťoch zapísať.",
+                "oneOf": [
+                    {
+                        "const": 0,
+                        "title": "None - neuvedená evidencia."
+                    },
+                    {
+                        "const": 1,
+                        "title": "Reservation - rezervácie."
+                    },
+                    {
+                        "const": 2,
+                        "title": "Accommondation - ubytovania."
+                    }
+                ]
+            },
+            "HotelGuestsSetResult": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ResultValueOf"
+                    },
+                    {                        
+                        "properties": {
+                            "data": {
+                                "description": "Ak boli osoby úspešne zapísané, vrátený objekt bude obsahovať jednoznačný identifikátor rodičovského záznamu (napr. rezervácie) a jej číslo, 'Info' obsahuje názov záznamu, napr. rezervácie.",
+                                "$ref": "#/components/schemas/RecordBaseInfo"
+                            }
+                        }
+                    }
+                ]
+            },
+            "HotelGuestsDeleteArg": {
+                "description": "Parameter pre metódy pre vymazanie hostí zo záznamu rezervácie.",
+                "type": "object",
+                "required": [
+                    "GUID"
+                ],                
+                "properties": {
+                    "GUID": {
+                        "type": "string",
+                        "description": "Jednoznačný identifikátor GUID rezervácie ubytovania, ktorej záznamy hostí majú byť vymazané. Identifikátor rezervácie je možné pomocou metódy 'GetHotel_RoomReservation'."
+                    },
+                    "GuestIDNums": {
+                        "type": "array",
+                        "description": "Zoznam jednoznačných dentifikátorov hostí rezervácie pre vymazanie (typ IDNum). Identifikátory je možné načítať metódou 'GetHotel_Guests'.",
+                        "items": {
+                            "type": "number",
+                            "format": "int64",
+                            "example": 1234
+                        }
+                    },
+                    "GuestGuids": {
+                        "type": "array",
+                        "description": "> Zoznam jednoznačných dentifikátorov hostí rezervácie pre vymazanie (typ GUID). **Prebieha implementácia, aktuálne nie je možné vyčítať GUID hostí, preto táto možnosť nie je použiteľná.**",
+                        "items": {
+                            "type": "string",
+                            "example": "38e1efb1-2dd2-42fa-97d4-3f7e9b82638f"
+                        }
+                    }
+                }  
+            },
+            "HotelGuestsDeleteResult": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ResultValueOf"
+                    },
+                    {                        
+                        "properties": {
+                            "data": {
+                                "description": "Ak boli osoby úspešne zapísané, vrátený objekt bude obsahovať jednoznačný identifikátor rodičovského záznamu (napr. rezervácie) a jej číslo, 'Info' obsahuje názov záznamu, napr. rezervácie.",
+                                "$ref": "#/components/schemas/HotelGuestsDeleteResultData"
+                            }
+                        }
+                    }
+                ]
+            },
+            "HotelGuestsDeleteResultData": {
+                "description": "Objekt s údajmi o výsledku vymazania hostí zo záznamu rezervácie.",
+                "type": "object",
+                "required": [
+                    "GUID",
+                    "Items"
+                ],
+                "properties": {
+                    "GUID": {
+                        "type": "string",
+                        "description": "Jednoznačný identifikátor GUID rezervácie ubytovania, ktorej záznamy hostí majú byť vymazané. Identifikátor rezervácie je možné pomocou metódy 'GetHotel_RoomReservation'."
+                    },
+                    "Items": {
+                        "description": "Zoznam informácií o spracovaní požadovaných záznamov hostí.",
+                        "$ref": "#/components/schemas/RecordBaseInfo"
+                    }
+                }
+            },
+
+
+            "HotelOccupyArg": {
+                "description": "Argument funkcie vrátenie obsadenosti (voľné a obsadené typy izieb) ubytovacieho zariadenia.",
+                "type": "object",
+                "required": [
+                    "DateFrom",
+                    "DateTo"
+                ],                
+                "properties": {
+                    "DateFrom": {
+                        "type": "string",
+                        "description": "Dátum od ktorého sa má počítať obsadenosť (dátum vo formáte yyyy-MM-ddTHH:mm:ss).",
+                        "example": "2025-01-01T10:55:00"
+                    },
+                    "DateTo": {
+                        "type": "string",
+                        "description": "Dátum do ktorého sa má počítať obsadenosť (dátum vo formáte yyyy-MM-ddTHH:mm:ss).",
+                        "example": "2025-01-01T10:55:00"
+                    },
+                    "RoomObjectNames": {
+                        "type": "array",
+                        "description": "Zoznam objektov (budov), za ktoré má byť obsadenosť zostavená. Ak nebude parameter zadaný, budú počítané všetky budovy (a teda izby) ubytovacieho zariadenia.",
+                        "items": {
+                            "type": "string",
+                            "example":"Budova objekt č. 1"
+
+                        }
+                    }
+                }
+            },
+            "HotelOccupyResult": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ResultValueOf"
+                    },
+                    {                        
+                        "properties": {
+                            "data": {
+                                "type": "object",                                
+                                "$ref": "#/components/schemas/HotelOccupyInfo"                                
+                            }
+                        }
+                    }
+                ]
+            },
+
+            "HotelRoomTypesGetResult": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ResultValueOf"
+                    },
+                    {                        
+                        "properties": {
+                            "data": {
+                                "type": "array",
+                                "description": "Zoznam typov izieb ubytovacieho zariadenia.",
+                                "items": {
+                                    "$ref": "#/components/schemas/HotelRoomType"
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+
+            "HotelPriceCategoryGuestArg": {
+                "AlsoDisabled": {
+                    "type": "bool",
+                    "description": "Príznak nčítania aj zakázaných cenových kategórií hosťa (budú načítané všetky, teda aj zakázané).",
+                    "example": false
+                },
+                "OnlyDefaultCategory": {
+                    "type": "bool",
+                    "description": "Príznak načítania len predvolenej cenovej kategórie hosťa.",
+                    "example": false
+                },
+                "Name": {
+                    "type": "string",
+                    "description": "Názov cenovej kategórie hosťa. Slúži len pre vyhľadanie a overenie (teda či existuje) konkrétnej kategórie hosťa."
+                }
+            },
+            "HotelPriceCategoryGuestResult": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ResultValueOf"
+                    },
+                    {                        
+                        "properties": {
+                            "data": {
+                                "type": "array",
+                                "description": "Object cenovej kategórie hosťa (cenové hladiny v OBERON-e sa priraďujú k cenovým hladinám). Cenová kategória hosťa sa používa pri overení dostupnosti voľných izieb (rezervácii ubytovania) a to pri výpočte ceny ubytovania (cenovej kalkulácie).",
+                                "items": {
+                                    "$ref": "#/components/schemas/HotelGuestPriceCategory"
+                                }
+                            }
+                        }
+                    }
+                ] 
+            },
+
+            "HotelRoomsGetResult": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ResultValueOf"
+                    },
+                    {                        
+                        "properties": {
+                            "data": {
+                                "type": "array",
+                                "description": "Zoznam izieb.",
+                                "items": {
+                                    "$ref": "#/components/schemas/HotelRoom"
+                                }
+                            }
+                        }
+                    }
+                ]    
+            },
+
+            "HotelGraphicalViewRoomsDataArg": {
+                "type": "object",
+                "description": "Podmienky pre načítanie údajov grafického prehľadu.",
+                "properties": {
+                    "DateStart": {
+                        "type": "string",
+                        "description": "Dátum začiatku, od ktorého sa majú načítať údaje (dátum vo formáte yyyy-MM-ddTHH:mm:ss).",
+                        "example": "2025-01-01T10:55:00"
+                    },
+                    "DateEnd": {
+                        "type": "string",
+                        "description": "Dátum do ktorého sa majú načítať údaje (dátum vo formáte yyyy-MM-ddTHH:mm:ss).",
+                        "example": "2025-01-01T10:55:00"
+                    }
+                }
+            },            
+            "HotelGraphicalViewRoomsDataResult": {
+                "type": "object",
+                "description": "Objekt obsahuje základné informácie o ubytovaní, rezerváciách potrebných pre generovanie grafického prehľadu izieb.",
+                "properties": {
+                    "Type": {
+                        "type": "integer",
+                        "description": "Druh evidencie, z ktorej záznam pochádza.",
+                        "oneOf": [
+                            {
+                                "const": 1,
+                                "title": "Accommodation",
+                                "description": "Záznam ubytovania."
+                            },
+                            {
+                                "const": 2,
+                                "title": "Reservation",
+                                "description": "Záznam rezervácie ubytovania."
+                            },
+                            {
+                                "const": 3,
+                                "title": "ContractReservation",
+                                "description": "Zmluvná rezervácia napr. s cestovnou kanceláriou. Nejedná sa o rezerváciu konkrétnej osoby na konkrétny termín. O spracovanie hosťa sa stará cestovná kancelária."
+                            },
+                            {
+                                "const": 32,
+                                "title": "Maintenances",
+                                "description": "Správa údržby - izbu však neblokuje a je dostupná."
+                            },
+                            {
+                                "const": 64,
+                                "title": "MaintenancesBlocked",
+                                "description": "Správa údržby - izba je zablokovaná a zhľadiska ubytovania nedostupná."
+                            }
+                        ]
+                    },
+                    "IDNum": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor záznamu v danom druhu 'Type' evidencie."
+                    },
+                    "DateTime_Arrival": {
+                        "type": "string",
+                        "description": "Dátum príchodu (dátum vo formáte yyyy-MM-ddTHH:mm:ss).",
+                        "example": "2025-01-01T10:55:00"
+                    },
+                    "DateTime_Departure": {
+                        "type": "string",
+                        "description": "Dátum príchodu (dátum vo formáte yyyy-MM-ddTHH:mm:ss).",
+                        "example": "2025-01-01T10:55:00"
+                    },
+                    "RoomNumber": {
+                        "type": "string",
+                        "description": "Číslo izby.",
+                        "example": "001"
+                    },
+                    "RoomName": {
+                        "type": "string",
+                        "description": "Názov izby.",
+                        "example": "Izba č. 101"
+                    },                    
+                    "RoomTypeIDNum": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor typu izby."
+                    },
+                    "RoomTypeName": {
+                        "type": "string",
+                        "description": "Názov typu izby.",
+                        "example": "Dvojlôžková izba"
+                    },
+                    "ReservationNumber": {
+                        "type": "string",
+                        "description": "Číslo rezervácie. Ak je tento záznam ubytovanie, uvádza číslo pôvodnej rezervácie (ak ubytovanie bolo vytvorené z rezervácie).",
+                        "example": "20250111"
+                    },
+                    "ExternalNumber": {
+                        "type": "string",
+                        "description": "Externé číslo rezervácie. Môže sa zadávať manuálne, prípadne automaticky pri používaní konektora 'Channel Manager' (AvailPro, beds24.com a podobne). Ak sa vytvorí rezervácia napr. na booking.com, ID (číslo) rezervácie z tohto portálu sa uloží tu, a ID rezervácie konkrétneho Channel Manager-a do 'ExternalSystemIdentifier'."
+                    },
+                    "ExternalSystemIdentifier": {
+                        "type": "string",
+                        "description": "Identifikátor externého systému. Obsahuje údaj o prepojení s externým systémom, napr. rezervácia vytvorená konektorom 'Channel Manager' (AvailPro, beds24.com, podobne). Ak sa vytvorí rezervácia napr. na booking.com, ID (číslo) rezervácie z tohto portálu sa uloží do 'ExternalNumber' a do tohto čísla sa uloží ID rezervácie konkrétneho Channel Manager-a. Používateľ tento údaj nemôže zadávať alebo upravovať, pretože podľa tohto poľa prebieha synchronizácia údajov. Pri rezervácii ubytovania je tento údaj uložený pri izbe (tabuľka Hotel_ReservationsBook_Rooms)."
+                    },
+                    "BusinessPartnerIdentificationNumber": {
+                        "type": "string",
+                        "description": "Číslo obchodného partnera, pri zmluvnej rezervácie číslo zmluvného partnera."
+                    },
+                    "GraphicalViewText": {
+                        "type": "string",
+                        "description": "Text ktorý má byť zobrazený v grafickom prehľade."
+                    },
+                    "GraphicalViewColor": {
+                        "type": "string",
+                        "description": "Farba ktorá má byť zobrazená v grafickom prehľade."
+                    },                   
+                    "GraphicalViewFontBold": {
+                        "type": "bool",
+                        "description": "Farba ktorá má byť zobrazená v grafickom prehľade.",
+                        "example": false
+                    },
+                    "IsRoomLocked": {
+                        "type": "bool",
+                        "description": "Zakázať zmenu izieb (presun na inú izbu).",
+                        "example": false
+                    },
+                    "IsFileRepositoryAttachments": {
+                        "type": "bool",
+                        "description": "Príznak, či sa k záznamu sa vzťahujú nejaké pripojené dokumenty.",
+                        "example": false
+                    },
+                    "ReservationState": {
+                        "type": "enum",
+                        "description": "Ak je tento záznam s evidencie rezervácií (podľa parametra 'Type'), uvádza sa stav rezervácie.",
+                        "$ref": "#/components/schemas/HotelReservationStateEnum"
+                    },
+                    "EMail": {
+                        "type": "string",
+                        "description": "Emailová adresa z rezervácie alebo ubytovania."
+                    },
+                    "Country": {
+                        "type": "string",
+                        "description": "Štát z rezervácie alebo ubytovania."
+                    },
+                    "Phone": {
+                        "type": "string",
+                        "description": "Telefónne číslo z rezervácie alebo ubytovania."
+                    },
+                    "Notice": {
+                        "type": "string",
+                        "description": "Poznámka z rezervácie alebo ubytovania."
+                    },
+                    "TurnoverWithVAT": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Obrat evidovaný v zázname ubytovania na všetkých hotelových účtoch, alebo obrat z rezervácie z kalkulácie ceny (s DPH)."
+                    },
+                    "TurnoverWithVAT_OnlyAdvance": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Obrat zálohy evidovaný v zázname ubytovania (na všetkých hotelových účtoch), alebo obrat z rezervácie z kalkulácie ceny (s DPH)."
+                    },
+                    "TurnoverWithVAT_OnlyAccommondation": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Obrat len za ubytovanie evidovaný v zázname ubytovania (na všetkých hotelových účtoch), alebo obrat z rezervácie z kalkulácie ceny (s DPH)."
+                    },
+                    "TurnoverWithVAT_ToPay": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Obrat na úhradu evidovaný v zázname ubytovania (na všetkých hotelových účtoch), alebo obrat z rezervácie z kalkulácie ceny (s DPH), ktorý je potrebné ešte doplatiť."
+                    }
+
+                }
+            },
+
+            "HotelRoom": {
+                "type": "object",
+                "description": "Položka kalkulácie ceny rezervácie izby ubytovacieho zariadenia.",
+                "required": [
+                    "Number",
+                    "Name"
+                ],
+                "properties": {                    
+                    "IDNum": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor izby v systéme OBERON. Izbu je možné jednoznačne identifikovať aj podľa jej názvu."
+                    },
+                    "Room_Number": {
+                        "type": "string",
+                        "description": "Číslo izby."
+                    },
+                    "Name": {
+                        "type": "string",
+                        "description": "Názov izby. Izbu je možné jednoznačne identifikovať aj podľa jej názvu."
+                    },                    
+                    "ShortDescription": {
+                        "type": "string",
+                        "description": "Skrátený popis izby."
+                    },
+                    "Description": {
+                        "type": "string",
+                        "description": "Popis izby (môže obsahovať aj HTML tag-y)."
+                    },
+                    "Room_Type_IDNum": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor typu izby v systéme OBERON. Zoznam všetkých typov izieb je možné získať metódou 'GetHotel_RoomTypes'."
+                    },                    
+                    "Room_Type_Name": {
+                        "type": "string",
+                        "description": "Názov typu izby. Zoznam všetkých typov izieb je možné získať metódou 'GetHotel_RoomTypes'."
+                    },
+                    "Room_Group": {
+                        "type": "string",
+                        "description": "Názov zoskupenia izieb (do ktorej patrí táto izba) - umožňuje členiť izby z dôvodu členenia v tlačových výstupov."
+                    },
+                    "Room_Size": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Rozloha (veľkosť izby) v m2."
+                    },                    
+                    "Location_HotelBuilding_Name": {
+                        "type": "string",
+                        "description": "Umiestnenie izby - budova."
+                    },
+                    "Location_HotelBuilding_Floor": {
+                        "type": "number",
+                        "format": "int32",
+                        "description": "Umiestnenie izby - poschodie."
+                    },
+                    "Clean_RegionName": {
+                        "type": "string",
+                        "description": "Členenie izby z hľadiska upratovania, tzv. rajóny."
+                    },
+                    "Color": {
+                        "type": "string",
+                        "description": "Farba izby (v grafickom prehľade izieb)."
+                    },
+                    "Owner_IDNum": {
+                        "type": "number",
+                        "format": "int32",
+                        "description": "Jednoznačný identifikátor variantu danej skladovej karty (variant je napr. veľkosť, farba a podobne) - jednoznačné číslo v rámci celej databázy."                        
+                    },
+                    "Owner_Notice": {
+                        "type": "string",
+                        "description": "Poznámka k majiteľovi izby (apartmánu)."
+                    },
+                    "DoorKeyData": {
+                        "type": "string",
+                        "description": "Údaje ku kľúču izby."
+                    },
+                    "State_Clean": {
+                        "type": "number",
+                        "format": "int32",
+                        "description": "Aktuálny stav izby z hľadiska upratovania."
+                    },
+                    "State_Clean_DateTimeLastChange": {
+                        "type": "string",
+                        "description": "Dátum a čas poslednej zmeny stavu upratovania. Ak sa mení dátum spracovania a tento dátum je iný deň, automaticky sa generuje stav upratania z hľadiska výmeny posteľnej bielizne (formát yyyy-MM-ddTHH:mm:ss).",
+                        "example": "2025-01-01T10:55:00"
+                    },
+                    "State_Clean_Notice": {
+                        "type": "string",
+                        "description": "Poznámka k aktuálnemu stavu izby z hľadiska upratovania."
+                    },
+                    "State_SmallRepair": {
+                        "type": "number",
+                        "format": "int32",
+                        "description": "Aktuálny stav izby z hľadiska drobných opráv (výmena žiarovky)."
+                    },
+                    "State_SmallRepair_Notice": {
+                        "type": "string",
+                        "description": "Poznámka k aktuálnemu stavu izby z hľadiska drobných opráv."
+                    },
+                    "State_SmallRepair_DateTimeRequired": {
+                        "type": "string",
+                        "description": "Dátum a čas zadania požiadavky pre drobné opravy (formát yyyy-MM-ddTHH:mm:ss).",
+                        "example": "2025-01-01T10:55:00"
+                    },
+                    "State_SmallRepair_DateTimeRepaired": {
+                        "type": "string",
+                        "description": "Dátum a čas vykonania drobnej opravy (formát yyyy-MM-ddTHH:mm:ss).",
+                        "example": "2025-01-01T10:55:00"
+                    },                    
+                    "PhoneNumber": {
+                        "type": "string",
+                        "description": "Číslo telefónu (ak je na izbe telefón)."
+                    },
+                    "Notice": {
+                        "type": "string",
+                        "description": "Poznámka k izbe (max. 255)."
+                    }
+                }
+            },
+
+            "HotelReservation": {
+                "type": "object",
+                "required": [
+                    "Number",
+                    "DateArrival",
+                    "DateDeparture",
+                    "Rooms"
+                ],
+                "description": "Objek základných údajov rezervácie (jedna rezervácia môže obsahovať viac ako jednu rezervovanú izbu).",
+                "properties": {
+                    "ReservationType": {
+                        "type": "integer",
+                        "description": "Určuje typ rezervácie.",
+                        "oneOf": [
+                            {
+                                "const": 0,
+                                "title": "Štandardná",
+                                "description": "Štandardná rezervácia."
+                            },
+                            {
+                                "const": 2,
+                                "title": "Zmluvná rezervácia",
+                                "description": "Zmluvná rezervácia napr. s cestovnou kanceláriou. Nejedná sa o rezerváciu konkrétnej osoby na konkrétny termín. O spracovanie hosťa sa stará cestovná kancelária."
+                            }
+                        ]
+                    },
+                    "GUID": {
+                        "type": "string",
+                        "description": "Jedinečný verejný identifikátor záznamu rezervácie v systéme OBERON (generovaný systémom). Môže sa napr. použiť ako priamy odkaz, kedy sa zašle hosťovi a on môže prostredníctvom webovej aplikácie zadať osobné údaje. Pri novej rezervácii sa nezadáva, generuje sa automaticky systémom OBERON.",
+                        "example": "38e1efb1-2dd2-42fa-97d4-3f7e9b82638f"
+                    },
+                    "Number": {
+                        "type": "string",
+                        "description": "Číslo rezervácie priradené systémom OBERON."
+                    },
+                    "DateArrival": {
+                        "type": "string",
+                        "description": "Dátum príchodu (dátum vo formáte yyyy-MM-ddTHH:mm:ss)",
+                        "example": "2025-01-01T10:55:00"
+                    },
+                    "Nights": {
+                        "type": "number",
+                        "format": "int32",
+                        "minimum": 1,
+                        "description": "Počet nocí rezervácie."
+                    },
+                    "DateDeparture": {
+                        "type": "string",
+                        "description": "Dátum odchodu (dátum vo formáte yyyy-MM-ddTHH:mm:ss).",
+                        "example": "2025-01-01T10:55:00"
+                    },
+                    "Rooms": {
+                        "type": "array",
+                        "description": "Obsahuje údaje o rezerovanej jednej, prípadne viacerých izbách (pri skupinovej rezervácii). Pri novej rezervácii alebo zisťovaní obsadenosti (dopyte na voľný termín) sa môže zadať len typ izby (alebo viac typov izieb), OBERON priradí konkrétnu izbu automaticky (ak je voľná/dostupná).",
+                        "items": {
+                            "$ref": "#/components/schemas/HotelReservationRoom"
+                        }
+                    },
+                    "Calculated_Price": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Cenová kalkulácia (cena)."
+                    },
+                    "PriceInAdvance": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Suma požadovanej zálohovej (rezervačnej) platby."
+                    },
+                    "DateExpiration": {
+                        "type": "string",
+                        "description": "Dátum vypršania platnosti rezervácie. Platnosť rezervácie skončí ak nie je potvrdená (dátum vo formáte yyyy-MM-ddTHH:mm:ss).",
+                        "example": "2025-01-01T10:55:00"
+                    },
+                    "ReservationState": {
+                        "type": "number",
+                        "description": "Stav novej rezervácie (napr. Nepotvrdená rezervácia, Potvrdená rezervácia). Stav rezervácie určuje systém a užívatelia.",
+                        "$ref": "#/components/schemas/HotelReservationStateEnum"
+                    },
+                    "PartnerNumber": {
+                        "type": "string",
+                        "description": "Identifikačné číslo partnera, ktorý vykonal rezerváciu."
+                    },
+                    "PartnerNumberContractReservation": {
+                        "type": "string",
+                        "description": "Identifikačné číslo zmluvného partnera."
+                    },
+                    "VariableSymbol": {
+                        "type": "string",
+                        "description": "Variabilný symbol - môže obsahovať údaj napojenia na externé systémy (ľubovolná textová hodnota)."
+                    },
+                    "ExternalSystemIdentifier": {
+                        "type": "string",
+                        "description": "Systémový identifikátor externého systému. Obsahuje údaj o prepojení s externým systémom. Hodnota je uložená do databázy, avšak pre užívateľa je nedostupná."
+                    },
+                    "ExternalSystemNumber": {
+                        "type": "string",
+                        "description": "Číslo rezervácie z externého systému, napr. číslo rezervácie zo systému 'booking.com'."
+                    },
+                    "Name": {
+                        "type": "string",
+                        "description": "Názov rezervácie - meno osoby."
+                    },
+                    "FamilyName": {
+                        "type": "string",
+                        "description": "Názov rezervácie - priezvisko."
+                    },
+                    "Email": {
+                        "type": "string",
+                        "description": "E-mail osoby, ktorá rezerváciu vykonala."
+                    },
+                    "Notice": {
+                        "type": "string",
+                        "description": "Poznámka k rezervácii."
+                    },
+                    "OtherRecords": {
+                        "type": "string",
+                        "description": "Iné záznamy (dlhší textový popis (65536 znakov))."
+                    },
+                    "Phone": {
+                        "type": "string",
+                        "description": "Telefónny kontakt na osobu, ktorý vykonala rezerváciu."
+                    },
+                    "Address_Street": {
+                        "type": "string",
+                        "description": "Adresa osoby (ulica), ktorá si rezervovala ubytovanie."
+                    },
+                    "Address_City": {
+                        "type": "string",
+                        "description": "Adresa osoby (obec), ktorá si rezervovala ubytovanie."
+                    },
+                    "Address_Country": {
+                        "type": "string",
+                        "description": "Adresa osoby (krajina), ktorá si rezervovala ubytovanie."
+                    },
+                    "Address_PostalCode": {
+                        "type": "string",
+                        "description": "Adresa osoby (PSČ), ktorá si rezervovala ubytovanie."
+                    },
+                    "ReservationSourceName": {
+                        "type": "string",
+                        "description": "Názov (pomenovanie) zdroja rezervácie."
+                    },
+                    "AdultsCount": {
+                        "type": "number",
+                        "format": "int32",
+                        "minimum": 0,
+                        "description": "Počet dospelých osôb v rezervácii."
+                    },
+                    "ChildrenCount": {
+                        "type": "number",
+                        "format": "int32",
+                        "minimum": 0,
+                        "description": "Počet detí v rezervácii."
+                    }
+                }
+            },            
+            "HotelReservationRoom": {
+                "type": "object",
+                "properties": {
+                    "Number": {
+                        "type": "string",
+                        "description": "Číslo izby. Každá rezervácia v systéme OBERON musí mať zadanú aj izbu (nielen typ izby). Avšak pri vytváraní novej rezervácie izba nemusí byť zadaná - vtedy OBERON vyberie izbu automaticky (podľa typu izby). Ak sa pri dopyte na voľný termín zadá číslo izby a aj názov izby, bude sa daný dopyt považovať dopytom na konkrétnu izbu."
+                    },
+                    "Name": {
+                        "type": "string",
+                        "description": "Pomenovanie izby. Každá rezervácia v systéme OBERON musí mať zadanú aj izbu (nielen typ izby). Avšak pri vytváraní novej rezervácie izba nemusí byť zadaná - vtedy OBERON vyberie izbu automaticky (podľa typu izby). Ak pri novej rezervácii tu bude zadaný názov a nebude zadané číslo izby, tu zadaná izba sa bude považovať len za preferovanú (predvolenú)."
+                    },
+                    "RoomTypeID": {
+                        "type": "number",
+                        "format": "int32",
+                        "minimum": 0,
+                        "description": "Jednoznačný identifikátor typu izby."
+                    },
+                    "RoomTypeName": {
+                        "type": "string",
+                        "description": "Názov typu izby."
+                    },
+                    "Beds": {
+                        "type": "number",
+                        "format": "int32",
+                        "minimum": 0,
+                        "description": "Počet pevných lôžok v rezervácii. V rezervácii môže byť aj viac izieb."
+                    },
+                    "ExtraBeds": {
+                        "type": "number",
+                        "format": "int32",
+                        "minimum": 0,
+                        "description": "Počet príležitostných lôžok v rezervácií. V rezervácii môže byť aj viac izieb."
+                    },
+                    "ChildrenAge": {
+                        "type": "array",
+                        "description": "Ak sa nachádzajú v rezervácii aj deti, zadávajú sa veky detí.",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "ExternalSystemIdentifier": {
+                        "type": "string",
+                        "description": "Identifikátor externého systému konkrétnej izby v danej rezervácii. Obsahuje údaj o prepojení s externým systémom, napr. rezervácia vytvorená konektorom AvailPro, Beds24, prípadne systémom využívajúce tieto webové služby."
+                    },
+                    "Notice": {
+                        "type": "string",
+                        "description": "Ľubovolná poznámka k izbe v rezervácii (max. 255)."
+                    },
+                    "DoorKeyPIN": {
+                        "type": "string",
+                        "description": "Používa sa pre dverový (trezorový) systém - obsahuje hodnotu pre otvorenie dverí izby (prípadne trezoru). PIN kód sa môže zaslať hosťovi, čo mu umožní automaticky sa ubytovať aj bez prítomnosti pracovníka recepcie."
+                    }
+                }
+            },
+            "HotelReservationPriceItem": {
+                "type": "object",
+                "description": "Položka kalkulácie ceny rezervácie izby ubytovacieho zariadenia.",
+                "required": [
+                    "Number",
+                    "Name"
+                ],
+                "properties": {
+                    "Number": {
+                        "type": "string",
+                        "description": "Číslo položky (napr. číslo skladovej karty)."
+                    },
+                    "Name": {
+                        "type": "string",
+                        "description": "Názov položky dokladu (napr. názov skladovej karty)."
+                    },
+                    
+                    "Name_Unit_Other": {
+                        "type": "string",
+                        "description": "Alternatívny názov položky pre príjem /výdaj/. Ak je na karte prepočet merných jednotiek pri výdaji, tak údaj obsahuje základný názov + koeficient + základnú mernú jednotku, napr. Pivo 0.5l ... pri predaji je uvádzané množstvo 1 ks. Ak nie je nastavený prepočet na karte, obsahuje základný názov skladovej položky."
+                    },
+                    "Unit": {
+                        "type": "string",
+                        "description": "Základná merná jednotka /MJ/. Pole je povinné."
+                    },
+                    "Unit_Other": {
+                        "type": "string",
+                        "description": "Alternatívna merná jednotka pre výdaj /príjem/."
+                    },
+                    "IsUnit_Other": {
+                        "type": "bool",
+                        "description": "Vracia či Item pracuje aj s alternatívnou jednotkou alebo len základnou."
+                    },
+                    "IsForeignCurrency": {
+                        "type": "bool",
+                        "description": "Vracia či Item pracuje aj v režime s cudzou menou /či je zadaný kód cudzej meny/."
+                    },
+                    "Amount_Unit": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Množstvo vydané /prijaté/ v základnej MJ - skutočne vydané /prijaté/ množstvo podľa základnej mernej jednotky /množstvo ktoré je uvádzané v skladových pohyboch/, napr. Borovička 0.04l ... 1 ks - Amount_Unit = 0.04 l, Amount_UnitOther = 1 ks."
+                    },
+                    "Amount_UnitOther": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Množstvo predané v alternatívnej MJ - /množstvo ktoré je uvádzané napr. pokladničnom doklade/, napr. Borovička 0.04l ... 1 ks  - Amount_UnitOther = 1    Amount_Unit = 0.04."
+                    },
+                    "Unit_Other_Coeficient": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Koeficient pri výdaji /príjme/ na položke. Prepočítava Amount_Unit a Amount_UnitOther. Nastavuje sa pomocou Unit_Other_SET."
+                    },
+                    "Price_WithoutVAT_Unit": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Jednotková cena bez DPH."
+                    },
+                    "Price_WithoutVAT_Unit_Other": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Jednotková cena bez DPH za alternatívnu MJ."
+                    },
+                    "Price_WithVAT_Unit": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Jednotková cena s DPH. Pole je povinné."
+                    },
+                    "Price_WithVAT_Unit_Other": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Jednotková cena s DPH za alternatívnu MJ, napr. Borovička 0.04 l ... 1 ks  = 40 SKK."
+                    },
+                    "Price_WithoutVAT": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Celková cena za položku bez DPH."
+                    },
+                    "Price_WithVAT": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Celková cena za položku s DPH. Pole je povinné."
+                    },
+                    "Price_WithVAT_WithoutDiscount": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Cena za položku s DPH bez zľavy (pred zadanou prípadnou zľavou). Slúži pre výpočet zľavy na položke. Ak sa zľava vypočítava viackrát, toto je predvolená suma z ktorej sa počíta. Nastavuje sa pri nastavení akejkoľvek sumy."
+                    },
+                    "Price_WithoutVAT_WithoutDiscount": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Cena za položku bez DPH a bez zľavy (pred zadanou prípadnou zľavou)."
+                    },
+                    "Discount": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Percentuálna zľava na položke. Pri nastavení sa automaticky prepočítajú ceny tejto položky. Dôležité! Pri nastavení ktorejkoľvek z cien sa zľava automaticky vynuluje, teda zľava by sa mala nastavovať ako posledná hodnota."
+                    },
+                    "CashRegister_Code": {
+                        "type": "string",
+                        "description": "Kód položky pre modul Pokladnica OBERON (zo skladovej karty pole Registračná pokladnica - kód položky)."
+                    },
+                    "BarCode": {
+                        "type": "string",
+                        "description": "Čiarový kód. Ak je na skladovej karte viac čiarových kódov, tu bude použitý prvý (z dôvodu exportu a importu údajov pomocou XML komunikácie)."
+                    },
+                    "ID": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "ID záznamu v databáze (automatický counter)."
+                    },
+                    "IDNum_Stock": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor skladu, ku ktorému patrí skladová položka."
+                    },
+                    "IDNum_Stock_Card": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor skladovej karty v rámci všetkých skladov (v rámci jednej databázy)."
+                    },
+                    "VAT_Rate": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Sadzba DPH danej položky. Pole je povinné."
+                    },
+                    "FC_ExchangeAmount": {
+                        "type": "number",
+                        "format": "int32",
+                        "description": "Množstvo meny, napr. 1, 100 a podobne."
+                    },
+                    "FC_IsInverseExchangeRate": {
+                        "type": "bool",
+                        "description": "Obrátené prepočítavanie do cudzej meny (alebo z cudzej meny) voči východzej mene. Napríklad kurz CZK sa uvádza 1EUR = 28CZK -> ak je predvolená mena EUR, suma v cudzej mene sa násobí, ak by bola predvolená mena CZK, nie je možné násobiť (musí sa deliť)."
+                    },
+                    "FC_ExchangeRate": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Cudzie meny - kurz."
+                    },
+                    "FC_CurrencyCode": {
+                        "type": "string",
+                        "description": "Kód cudzej meny (foreign currency). Po nastavení sa automaticky nastavuje množstvo meny a zaokrúhlenie (počet miest) výšky DPH položky."
+                    },
+                    "FC_Price_WithoutVAT_Unit": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Cudzia mena - jednotková cena bez DPH."
+                    },
+                    "FC_Price_WithoutVAT_Unit_Other": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Cudzia mena - jednotková cena bez DPH za alternatívnu MJ."
+                    },
+                    "FC_Price_WithVAT_Unit": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Cudzia mena - jednotková cena s DPH."
+                    },
+                    "FC_Price_WithVAT_Unit_Other": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Cudzia mena - jednotková cena s DPH za alternatívnu MJ, napr. Borovička 0.04 l ... 1 ks  = 1 EUR."
+                    },
+                    "FC_Price_WithoutVAT": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Cudzia mena - celková cena za položku bez DPH."
+                    },
+                    "FC_Price_WithVAT": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Cudzia mena - celková cena za položku s DPH."
+                    },
+                    "FC_Price_WithVAT_WithoutDiscount": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Cudzia mena - Cena za položku s DPH bez zľavy. Slúži pre výpočet zľavy na položke."
+                    },
+                    "IDNum_Stock_Card_Variant": {
+                        "type": "number",
+                        "description": "Jednoznačný identifikátor variantu danej skladovej karty (variant je napr. veľkosť, farba a podobne) - jednoznačné číslo v rámci celej databázy.",
+                        "format": "int32"                        
+                    },
+                    "VariantName": {
+                        "type": "string",
+                        "description": "Názov variantu danej skladovej karty. Povinný len v prípade, ak skladová karta pracuje s variantmi a je zadaný jednoznačný identifikátor variantu 'IDNum_Stock_Card_Variant'."
+                    },
+                    "Notice": {
+                        "type": "string",
+                        "description": "Ľubovolná poznámka k izbe v rezervácii (max. 255)."
+                    },
+                    "Tag": {
+                        "type": "string",
+                        "description": "Môže obsahovať ďalšie údaje k tejto položke."
+                    }
+                }
+            },
+            "HotelReservationStateEnum": {
+                "type": "enum",
+                "oneOf": [
+                    {
+                        "const": 0,
+                        "title": "None - nie je zadaný stav (napr. zmluvné rezervácie)."
+                    },
+                    {
+                        "const": 1,
+                        "title": "OnlineRequest - nový on-line dopyt."
+                    },
+                    {
+                        "const": 2,
+                        "title": "OnLineReservation - nová on-line rezervácia.."
+                    },
+                    {
+                        "const": 4,
+                        "title": "OnLineReservationInProgress - on-line rezervácia (vybavuje sa)."
+                    },
+                    {
+                        "const": 8,
+                        "title": "RequestInProgress - dopyt (vybavuje sa)."
+                    },
+                    {
+                        "const": 16,
+                        "title": "NotConfirmed - nepotvrdená rezervácia."
+                    },
+                    {
+                        "const": 32,
+                        "title": "Confirmed - potvrdená rezervácia."
+                    },
+                    {
+                        "const": 64,
+                        "title": "Confirmed_Advance - rezervácia so zálohou."
+                    },
+                    {
+                        "const": 512,
+                        "title": "Canceled - zrušená rezervácia."
+                    }
+                ]
+            },
+            
+            "HotelReservationAvailabilityRoomInfo": {
+                "type": "object",
+                "description": "Údaje o izbe a jej dostupnosti pre zadanú rezerváciu.",
+                "required": [
+                    "RoomNumber",
+                    "Name",
+                    "RoomTypeName",
+                    "Reservation_Adults",
+                    "Reservation_Children",
+                    "Reservation_ChildrenAge"
+                ],
+                "properties": {
+                    "IDNum": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor izby v systéme OBERON. Izbu je možné jednoznačne identifikovať aj podľa jej názvu."
+                    },
+                    "Name": {
+                        "type": "string",
+                        "description": "Názov izby. Izbu je možné jednoznačne identifikovať aj podľa jej názvu."
+                    },
+                    "RoomNumber": {
+                        "type": "string",
+                        "description": "Číslo izby."
+                    },
+                    "RoomTypeName": {
+                        "type": "string",
+                        "description": "Názov typu izby. Zoznam všetkých typov izieb je možné získať metódou 'GetHotel_RoomTypes'."
+                    },
+                    "Reservation_Adults": {
+                        "type": "number",
+                        "format": "int32",
+                        "description": "Počet dospelých v rezervácii."
+                    },
+                    "Reservation_Children": {
+                        "type": "number",
+                        "format": "int32",
+                        "description": "Počet detí v rezervácií."
+                    },
+                    "Reservation_ChildrenAge": {
+                        "type": "array",
+                        "description": "Ak sa nachádzajú v rezervácii aj deti, zadávajú sa veky detí.",
+                        "items": {
+                            "type": "number",
+                            "format": "int32"
+                        }
+                    },
+                    "Reservation_Notice": {
+                        "type": "string",
+                        "description": "Ľubovolná poznámka k izbe napr. v rezervácii."
+                    }   
+                }
+            },
+            "HotelReservationAvailabilityValidationItem": {
+                "type": "object",
+                "description": "Údaje o probléme pri overení dostupnosti izby prípadne možnosti vytvorenia rezervácie.",
+                "required": [
+                    "Number"
+                ],
+                "properties": {
+                    "IDNum": {
+                        "type": "number",
+                        "format": "int32",
+                        "description": "Číselné označenie poblému.",
+                        "oneOf": [
+                            {
+                                "const": 0,
+                                "title": "None - neznámy problém."
+                            },
+                            {
+                                "const": 101501,
+                                "title": "PriceLevelPersonCountPriceEmpty - cenová hladina použitá pri výpočte nemá zadané ceny pre daný počet osôb."
+                            },
+                            {
+                                "const": 101510,
+                                "title": "TermMinimumLength - požadovaná minimálna dĺžka pobytu nebola dosiahnutá."
+                            },
+                            {
+                                "const": 101511,
+                                "title": "TermMaximumLength - požadovaná maximálna dĺžka pobytu bola presiahnutá."
+                            },
+                            {
+                                "const": 101515,
+                                "title": "TermArrivalDateUnavailable - začiatok pobytu nie je v tomto dni týždňa možný."
+                            },
+                            {
+                                "const": 101516,
+                                "title": "TermDepartureDateUnavailable - koniec pobytu nie je v tomto dni týždňa možný."
+                            },
+                            {
+                                "const": 101999,
+                                "title": "NotSupportedError - iná presne neurčená chyba, môže nastať napr. pri nesúlade chyby webovej služby a chyby z modulu hotelová recepcia."
+                            }
+                        ]
+                    },
+                    "Name": {
+                        "type": "string",
+                        "description": "Názov izby. Izbu je možné jednoznačne identifikovať aj podľa jej názvu."
+                    },
+                    "Number": {
+                        "type": "string",
+                        "description": "Číslo izby."
+                    },
+                    "Description": {
+                        "type": "string",
+                        "description": "Popis problému."
+                    },
+                    "Value": {
+                        "type": "string",
+                        "description": "Dodatočná textová hodnota vzťahujúca sa ku problému. Podobne ako číselná hodnota avšak texty nie je príliš vhodné používať, pretože je problém s prekladom v API webových služieb. Je sem však možné napr. uviesť hodnotu, ktorú zadal používateľ ako vstupnú a je chybná, táto sa potom môže stať súčasťou preloženého textu."
+                    } 
+                }
+            },
+
+            "HotelGuestsGetResultData": {
+                "type": "object",
+                "description": "Obsahuje údaje o hosťoch, ktorí sa majú zapísať do evidencie. Bližšie určuje evidenciu a záznam, ku ktorému sa majú údaje zapísať, napr. zoznam hostí k rezervácii, zoznam hostí k ubytovaniu, k rezervácii služieb (priestorov či športovísk) a podobne.",
+                "required": [
+                    "IDNumParent",
+                    "GUID",
+                    "Guests"
+                ],
+                "properties": {                    
+                    "IDNumParent": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor rodiča (záznamu), ku ktorému sa osoby zapisujú, napr. jednoznačný identifikátor rezervácie alebo ubytovania a podobne. Ak je zadaný GUID, táto hodnota sa nezadáva."
+                    },
+                    "GUID": {
+                        "type": "string",
+                        "description": "Jednoznačný identifikátor GUID rodiča (záznamu), ku ktorému sa osoby zapisujú, napr. jednoznačný identifikátor rezervácie. Identifikátor ako náhrada IDNumParent."
+                    },
+                    "Guests": {
+                        "type": "array",
+                        "description": "Zoznam hostí.",
+                        "items": {
+                            "$ref": "#/components/schemas/HotelGuest"
+                        }
+                    }                    
+                }
+            },
+            "HotelGuest": {
+                "type": "object",
+                "description": "Obsahuje údaje o osobe, hosťovi.",
+                "required": [
+                    "Room_Occupy_Percento",
+                    "OccupyDays"
+                ],
+                "properties": {                    
+                    "IDNum": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor hosťa v systéme OBERON. Pri zadávaní nového záznamu sa hodnota nenastavuje."
+                    },
+                    "DocumentIdentificationNumber": {
+                        "type": "string",
+                        "description": "Číslo dokladu totožnosti."
+                    },
+                    "Name": {
+                        "type": "string",
+                        "description": "Meno.",
+                        "example": "Janka"
+                    },
+                    "FamilyName": {
+                        "type": "string",
+                        "description": "Priezvisko.",
+                        "example": "Bežná"
+                    },
+                    "Title": {
+                        "type": "string",
+                        "description": "Titul (pred menom).",
+                        "example": ""
+                    },
+                    "DateOfBirth": {
+                        "type": "string",
+                        "description": "Dátum narodenia (formát yyyy-MM-ddTHH:mm:ss).",
+                        "example":"2025-01-01T10:55:00"
+                    },
+                    "PlaceOfBirth": {
+                        "type": "string",
+                        "description": "Miesto (obec) narodenia.",
+                        "example": "Bratislava"
+                    },
+                    "Nationality": {
+                        "type": "string",
+                        "description": "Štátna príslušnosť.",
+                        "example": "Slovenská"
+                    },
+                    "NationalityISO": {
+                        "type": "string",
+                        "description": "ISO kód štátnej príslušnosti (troj miestny, napr. SVK, CZK).",
+                        "example": "SVK"
+                    },
+                    "Address_Street": {
+                        "type": "string",
+                        "description": "Ulica (aj so súpisným číslom).",
+                        "example": "Mierová 123"
+                    },
+                    "Address_PostalCode": {
+                        "type": "string",
+                        "description": "Poštové smerovacie číslo (PSČ, ZIP).",
+                        "example": "01001"
+                    },
+                    "Address_City": {
+                        "type": "string",
+                        "description": "Obec, mesto.",
+                        "example": "Bratislava"
+                    },
+                    "Address_Country": {
+                        "type": "string",
+                        "description": "Krajina.",
+                        "example": "Slovenská republika"
+                    },
+                    "Address_CountryISO": {
+                        "type": "string",
+                        "description": "ISO (trojmiestny) kód krajiny.",
+                        "example": "604"
+                    },
+                    "Email": {
+                        "type": "string",
+                        "description": "Email.",
+                        "example": "janka.bezna@test.com"
+                    },
+                    "PhoneNumber": {
+                        "type": "string",
+                        "description": "Telefónne číslo.",
+                        "example": ""
+                    },
+                    "RoomNumber": {
+                        "type": "string",
+                        "description": "Číslo izby.",
+                        "example": ""
+                    },
+                    "RoomName": {
+                        "type": "string",
+                        "description": "Názov izby, v prípade rezervácie.",
+                        "example": ""
+                    },
+                    "Notice": {
+                        "type": "string",
+                        "description": "Poznámka (max. 255)."
+                    },
+                    "Visa_Type": {
+                        "type": "string",
+                        "description": "Typ víza - zadáva sa len pri krajine (štáte), s ktorou platí vízová povinnosť."
+                    },
+                    "Visa_Number": {
+                        "type": "string",
+                        "description": "Číslo víza - zadáva sa len pri krajine (štáte), s ktorou platí vízová povinnosť."
+                    },
+                    "Visa_Issuer": {
+                        "type": "string",
+                        "description": "Údaj o udelení víza (kde bolo vízum udelené). Zadáva sa len pri krajine (štáte), s ktorou platí vízová povinnosť."
+                    },
+                    "Visa_Date_ValidFrom": {
+                        "type": "string",
+                        "description": "Dátum začiatku platnosti víza (formát yyyy-MM-ddTHH:mm:ss). Zadáva sa len pri krajine (štáte), s ktorou platí vízová povinnosť.",
+                        "example": "2025-01-01T10:55:00"
+                    },
+                    "Visa_Date_ValidTo": {
+                        "type": "string",
+                        "description": "Dátum konca platnosti víza (formát yyyy-MM-ddTHH:mm:ss). Zadáva sa len pri krajine (štáte), s ktorou platí vízová povinnosť.",
+                        "example": "2025-01-01T10:55:00"
+                    },
+                    "LoyaltyCardNumber": {
+                        "type": "string",
+                        "description": "Číslo vernostnej karty hosťa (nepovinný údaj)."
+                    }
+                }
+            },
+
+            "HotelOccupyInfo": {
+                "type": "object",
+                "description": "Obsahuje údaje o obsadenosti ubytovacieho zariadenia po dňoch v členení podľa izieb a typov izieb.",
+                "required": [
+                    "Room_Occupy_Percento",
+                    "OccupyDays"
+                ],
+                "properties": {                    
+                    "Room_Occupy_Percento": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Celková obsadenosť (vyťaženosť) izieb za dané obdobie v percentuálnom vyjadrení. Počíta sa aj z ubytovania, ako aj do budúcna z rezervácií. Prístelky sa počítajú nasledovne - napr. izba 2 + 2, 1+0->50%, 2+0->100%, 2+1->125% , 2+2->150%."
+                    },
+                    "OccupyDays": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/HotelOccupyInfoDay"
+                        }
+                    }
+                }
+            },
+            "HotelOccupyInfoDay": {
+                "type": "object",
+                "description": "Obsahuje údaje jedného dňa obsadenosti ubytovacieho zariadenia.",
+                "required": [
+                    "Date",
+                    "Rooms",
+                    "RoomTypes",
+                    "Room_Free",
+                    "Room_Accommondation",
+                    "Room_Reservation",
+                    "Person_TotalCapacity_Beds",
+                    "Person_TotalCapacity_ExtraBeds",
+                    "Person_Free_Beds",
+                    "Person_Free_ExtraBeds"
+                ],
+                "properties": {                    
+                    "Date": {
+                        "type": "string",
+                        "description": "Dátum (konkrétny deň), ktorého obsadenosť je uvedená (formát yyyy-MM-ddTHH:mm:ss).",
+                        "example": "2025-01-01T10:55:00"
+                    },
+                    "Room_Free": {
+                        "type": "number",
+                        "format": "int32",
+                        "description": "Počet voľných izieb v danom dni."
+                    },
+                    "Room_Accommondation": {
+                        "type": "number",
+                        "format": "int32",
+                        "description": "Počet obsadených (ubytovaných) izieb v danom dni."
+                    },
+                    "Room_Reservation": {
+                        "type": "number",
+                        "format": "int32",
+                        "description": "Počet rezervovaných izieb (bez ohľadu na stav rezervácie)."
+                    },
+                    "Person_TotalCapacity_Beds": {
+                        "type": "number",
+                        "format": "int32",
+                        "description": "Celkový počet pevných lôžok v danom dni."
+                    },
+                    "Person_TotalCapacity_ExtraBeds": {
+                        "type": "number",
+                        "format": "int32",
+                        "description": "Celkový počet prísteliek v danom dni."
+                    },
+                    "Person_Free_Beds": {
+                        "type": "number",
+                        "format": "int32",
+                        "description": "Celkový počet voľných pevných lôžok v danom dni."
+                    },
+                    "Person_Free_ExtraBeds": {
+                        "type": "number",
+                        "format": "int32",
+                        "description": "Celkový počet voľných prísteliek v danom dni."
+                    },
+                    "Rooms": {
+                        "type": "array",
+                        "description": "Zoznam izieb s obsadenosťou v danom dni.",
+                        "items": {
+                            "$ref": "#/components/schemas/HotelOccupyInfoDayRoom"
+                        }
+                    },
+                    "RoomTypes": {
+                        "type": "array",
+                        "description": "Zoznam typov izieb s obsadenosťou v danom dni.",
+                        "items": {
+                            "$ref": "#/components/schemas/HotelOccupyInfoDayRoomType"
+                        }
+                    }
+
+                }
+            },
+            "HotelOccupyInfoDayRoom": {
+                "type": "object",
+                "description": "Obsahuje údaje o izbe a obsadenosti v jednom dni.",
+                "required": [
+                    "RoomIDNum",
+                    "RoomNumber",
+                    "RoomName",
+                    "RoomTypeIDNum",
+                    "RoomTypeName",
+                    "IsFree",
+                    "IsAccommondation",
+                    "IsReservation",
+                    "IsBlocked"
+                ],
+                "properties": {
+                    "RoomIDNum": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor izby."
+                    },
+                    "RoomNumber": {
+                        "type": "string",
+                        "description": "Číslo izby (môže obsahovať alfanumerické znaky).",
+                        "example": "001"
+                    },
+                    "RoomName": {
+                        "type": "string",
+                        "description": "Názov izby.",
+                        "example": "Izba č. 101"
+                    },
+                    "RoomTypeIDNum": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor typu izby."
+                    },
+                    "RoomTypeName": {
+                        "type": "string",
+                        "description": "Názov typu izby.",
+                        "example": "Dvojlôžková izba"
+                    },
+                    "IsFree": {
+                        "type": "bool",
+                        "description": "Príznak voľnej izby (true).",
+                        "example": true
+                    },
+                    "IsAccommondation": {
+                        "type": "bool",
+                        "description": "Príznak izby obsadenej ubytovaním (true).",
+                        "example": true
+                    },
+                    "IsReservation": {
+                        "type": "bool",
+                        "description": "Príznak izby s rezerváciou (true).",
+                        "example": true
+                    },
+                    "IsBlocked": {
+                        "type": "bool",
+                        "description": "Príznak blokovanej (nedostupnej) izby (true) z dôvodu údržby alebo inúho dôvodu.",
+                        "example": false
+                    }
+                }
+            },
+            "HotelOccupyInfoDayRoomType": {
+                "type": "object",
+                "description": "Obsahuje údaje o type izby a obsadenosti v jednom dni daného typu izby.",
+                "required": [
+                    "RoomTypeIDNum",
+                    "RoomTypeName",
+                    "Room_Free",
+                    "Room_Accommondation",
+                    "Room_Reservation",
+                    "Person_TotalCapacity_Beds",
+                    "Person_TotalCapacity_ExtraBeds",
+                    "Person_Free_Beds",
+                    "Person_Free_ExtraBeds"
+                ],
+                "properties": {
+                    "RoomTypeIDNum": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor typu izby."
+                    },
+                    "RoomTypeName": {
+                        "type": "string",
+                        "description": "Názov typu izby.",
+                        "example": "Dvojlôžková izba"
+                    },
+                    "Room_Free": {
+                        "type": "number",
+                        "format": "int32",
+                        "description": "Pôčet voľných izieb.",
+                        "example": 5
+                    },                    
+                    "Room_Accommondation": {
+                        "type": "number",
+                        "format": "int32",
+                        "description": "Pôčet izieb obsadených ubytovaním.",
+                        "example": 2
+                    },
+                    "Room_Reservation": {
+                        "type": "number",
+                        "format": "int32",
+                        "description": "Pôčet rezervovaných izieb.",
+                        "example": 5
+                    },
+                    "Person_TotalCapacity_Beds": {
+                        "type": "number",
+                        "format": "int32",
+                        "description": "Celkový pôčet dostupných izieb.",
+                        "example": 5
+                    },
+                    "Person_TotalCapacity_ExtraBeds": {
+                        "type": "number",
+                        "format": "int32",
+                        "description": "Celkový pôčet dostupných prísteliek.",
+                        "example": 5
+                    },
+                    "Person_Free_Beds": {
+                        "type": "number",
+                        "format": "int32",
+                        "description": "Pôčet voľných pevných lôžok.",
+                        "example": 5
+                    },
+                    "Person_Free_ExtraBeds": {
+                        "type": "number",
+                        "format": "int32",
+                        "description": "Pôčet voľných prísteliek.",
+                        "example": 5
+                    }
+                }
+            },
+
+            "HotelGuestPriceCategory": {
+                "description": "Object cenovej kategórie hosťa (cenové hladiny v OBERON-e sa priraďujú k cenovým hladinám). Cenová kategória hosťa sa používa pri overení dostupnosti voľných izieb (rezervácii ubytovania) a to pri výpočte ceny ubytovania (cenovej kalkulácie).",
+                "type": "object",
+                "required": [
+                    "Number",
+                    "Name"
+                ],
+                "properties": {
+                    "IDNum": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor záznamu v systéme OBERON."
+                    },
+                    "Name": {
+                        "type": "string",
+                        "description": "Názov cenovej kategórie hosťa."
+                    },                    
+                    "Notice": {
+                        "type": "string",
+                        "description": "Poznámka (max. 255)."
+                    },
+                    "Disabled": {
+                        "type": "bool",
+                        "description": "Príznak zakázanej cenovej kategórie (ak je hodnota TRUE).",
+                        "example": false
+                    },
+                    "DefaultCategory": {
+                        "type": "bool",
+                        "description": "Príznak predvolenej cenovej kategórie hosťa.",
+                        "example": false
+                    }
+                }
+            },
+
+            "HotelRoomType": {
+                "type": "object",
+                "description": "Údaje o type izby.",
+                "required": [
+                    "Name",
+                    "NumberBeds",
+                    "NumberExtraBeds"
+                ],
+                "properties": {
+                    "IDNum": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor záznamu v systéme OBERON."
+                    },
+                    "Name": {
+                        "type": "string",
+                        "description": "Názov typu izby."
+                    },                    
+                    "Notice": {
+                        "type": "string",
+                        "description": "Poznámka (max. 255)."
+                    },
+                    "NumberBeds": {
+                        "type": "number",
+                        "format": "int32",
+                        "minimum": 1,
+                        "description": "Počet pevných lôžok."
+                    },
+                    "NumberExtraBeds": {
+                        "type": "number",
+                        "format": "int32",
+                        "minimum": 0,
+                        "description": "Počet prístelkov."
+                    },
+                    "PricesLevel_Name": {
+                        "type": "string",
+                        "description": "Názov cenovej hladiny, ku ktorej patrí tento typ izby. Cenová hladina sa používa pri automatickom výpočte ceny ubytovania."
+                    },
+                    "ChangingDays_Towels": {
+                        "type": "number",
+                        "format": "int32",
+                        "minimum": 0,
+                        "description": "Počet dní výmeny uterákov."
+                    },
+                    "ChangingDays_Bedclothes": {
+                        "type": "number",
+                        "format": "int32",
+                        "minimum": 0,
+                        "description": "Počet dní výmeny posteľnej bielizne."
+                    },
+                    "Price_From": {
+                        "type": "number",
+                        "format": "float",
+                        "minimum": 1,
+                        "description": "Najnižšia cena za izbu."
+                    },
+                    "Price_To": {
+                        "type": "number",
+                        "format": "float",
+                        "minimum": 1,
+                        "description": "Najvyššia cena za izbu."
+                    },
+                    "RoomIDNumList": {
+                        "type": "array",
+                        "description": "Zoznam jednoznačných identifikátorov izieb 'HotelRoom', ktoré sú daného typu izby.",
+                        "items": {
+                            "type": "number",
+                            "format": "int64"
+                        }
+                    }
+                }
+            },
+            
+            "LoginDataArg" : {
+                "type": "object",
+                "description": "Spravidla sa používa v návratovej hodnote 'ResultValueOf' vo vlastnosti Data (Data As RecordBaseInfo). Je využívaná hlavne ako časť návratovej hodnoty pri metódach, ktoré vytvárajú nové záznamy - po vytvorení záznamu sa vracia jeho jednoznačný identifikátor a napr. číslo dokladu.",
+                "properties": {
+                    "UserName": {
+                        "type": "string",
+                        "description": "Meno používateľa."
+                    },
+                    "Password": {
+                        "type": "string",
+                        "description": "Hash hesla (typu SHA-1), prípadne hash hesla obohatený o SALT (k salt-u sa pripojí heslo a následne sa vytvorí hash, salt je možné získať metódou GetLoginSalt). V odôvodnených prípadoch je možné zasielať heslo aj ako čistý text, znižuje to však bezpečnosť webovej služby (umožňuje útočníkovi získať heslo - záleží však aj na nastavení spôsobu zabezpečenia webovej služby)."
+                    },
+                    "LoginTag": {
+                        "type": "string",
+                        "description": "Ľubovoľná textová hodnota - danú hodnotu si webová služba uloží. Tým je možné napr. overiť zoznam pripojených externých zariadení do webovej služby."
+                    }
+                }                
+            },
+
+
+            "HotelReservationBusinessPartner": {
+                "type": "object",
+                "description": "Údaje obchodného partnera v rezervácii hotela.",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BusinessPartnerBase"
+                    },
+                    {                        
+                        "properties": {
+                            "IdentificationNumber": {
+                                "type": "string",
+                                "description": "Identifikačné číslo partnera."
+                            }
+                        }
+                    }
+                ]                
+            },
+
+
+
+            "BusinessPartnerBase" : {
+                "type": "object",
+                "description": "Základný objekt obchodného partnera.",
+                "required": [],
+                "properties": {
+                    "Name": {
+                        "type": "string",
+                        "description": "Názov obchodného partnera."
+                    },
+                    "Address": {
+                        "type": "object",                                
+                        "description": "Adresa obchodného partnera.",
+                        "$ref": "#/components/schemas/Address"                        
+                    }
+                }                
+            },
+
+            "Address" : {
+                "type": "object",
+                "description": "Základný objekt adresy.",
+                "required": [],
+                "properties": {
+                    "Street": {
+                        "type": "string",
+                        "description": "Ulica."
+                    },
+                    "City": {
+                        "type": "string",
+                        "description": "Mesto/Obec."
+                    },
+                    "PostalCode": {
+                        "type": "string",
+                        "description": "PSČ/ZIP, poštové smerovacie číslo."
+                    },
+                    "Country": {
+                        "type": "string",
+                        "description": "Krajina."
+                    }
+                }                
+            },
+
+            "RecordBaseInfo" : {
+                "type": "object",
+                "description": "Spravidla sa používa v návratovej hodnote 'ResultValueOf' vo vlastnosti Data (Data As RecordBaseInfo). Je využívaná hlavne ako časť návratovej hodnoty pri metódach, ktoré vytvárajú nové záznamy - po vytvorení záznamu sa vracia jeho jednoznačný identifikátor a napr. číslo dokladu.",
+                "properties": {
+                    "IDNum": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor nového záznamu."
+                    },
+                    "GUID": {
+                        "type": "string",
+                        "description": "Jednoznačný identifikátor typu GUID nového záznamu, ak evidencia podporuje daný typ identifikátora."
+                    },
+                    "Value": {
+                        "type": "string",
+                        "description": "Spravidla číslo nového záznamu, napr. pri objednávke číslo novej vytvorenej objednávky."
+                    },
+                    "Info": {
+                        "type": "string",
+                        "description": "Ďalšie doplňujúce info k novovytvorenému záznamu."
+                    },
+                    "state": {
+                        "type": "integer",
+                        "description": "Stav záznamu po spracovaní požiadavky (napr. pri novo vytvorenom zázname 'Created').",
+                        "oneOf": [
+                            {
+                                "const": 0,
+                                "title": "Uknown - neznámy stav."
+                            },
+                            {
+                                "const": 1,
+                                "title": "Created - záznam bol vytvorený."
+                            },
+                            {
+                                "const": 2,
+                                "title": "Modified - záznam bol aktualizovaný."
+                            },
+                            {
+                                "const": 5,
+                                "title": "Deleted - záznam bol vymazaný."
+                            },
+                            {
+                                "const": 5,
+                                "title": "Errored - nejaká chyba pri spracovaní (bližší popis by mal byť dostupný v parametri 'Info')."
+                            },
+                            {
+                                "const": 5,
+                                "title": "NotFound - záznam nebol nájdený."
+                            }
+                        ]
+                    }
+                }                
+            },
+            "ResultValueOf" : {
+                "type": "object",
+                "description": "Základný objekt výsledku volaných metód API obsahuje údaje s pracovaní. Samotné výsledné data sa nachádzajú v parametri 'data', ktorého typ určruje volaná API metóda. Objekt je dedený vo výsledných objektov metód.",
+                "properties": {
+                    "result": {
+                        "type": "bool",
+                        "description": "Výsledok volanej metódy, result = TRUE - metóda bola úspešná, result = FALSE - metóda bola neúspešná.",
+                        "example": false
+                    },
+                    "errNumber": {
+                        "type": "integer",
+                        "description": "Kód chyby, vrátený API prípadne niektorou z interne volaných funkcií."
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Popis chyby."
+                    },
+                    "data": {
+                        "type": "object",
+                        "description": "Druh objektu výsledku určuje volaná API metóda."
+                    }
+                }                
+            }            
+        }
+    }
+}

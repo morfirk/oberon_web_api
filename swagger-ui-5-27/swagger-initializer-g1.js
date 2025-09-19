@@ -5,11 +5,12 @@ window.onload = function () {
    
     window.loginSalt = "";
     window.userData = "";
-
+    
     window.ui = SwaggerUIBundle({
-        url: "https://raw.githubusercontent.com/morfirk/oberon_web_api/refs/heads/main/openapi_oberon_web_gen1_hotel.json",
-        //url: dataPath,
-        //spec: window.jsonData,
+        urls: [ 
+            { url: window.location.origin + "/openapi_oberonweb_g1_hotel.json", name: "Hotelová recepcia" },
+            { url: window.location.origin + "/openapi_oberonweb_g1_stock.json", name: "Skladová evidencia" }
+         ],
         dom_id: '#swagger-ui',
         deepLinking: true,
         supportHeaderParams: true,
@@ -22,8 +23,9 @@ window.onload = function () {
             OberonWebAuthorizePlugin
         ],
         layout: "StandaloneLayout",
-        supportedSubmitMethods: ['get', 'post']
+        supportedSubmitMethods: ['get', 'post']        
     });
+
 
     // OBERON Login plugin for SWAGGER to enable authorization
     function OberonWebAuthorizePlugin() {
