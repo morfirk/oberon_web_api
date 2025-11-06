@@ -190,32 +190,7 @@
                             "type": "string"
                         }
                     }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "required": [
-                                    "userName"
-                                ],
-                                "properties": {
-                                    "status": {
-                                        "type": "bool",
-                                        "description": "Stav spracovania požiadavky.",
-                                        "example": true
-                                    },
-                                    "data": {
-                                        "type": "string",
-                                        "description": "Vypočítaný.",
-                                        "example": "85eb1d491630139c2f3c1846d48789806e285ccb"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "required": true
-                },
+                ],                
                 "responses": {
                     "200": {
                         "description": "OK",
