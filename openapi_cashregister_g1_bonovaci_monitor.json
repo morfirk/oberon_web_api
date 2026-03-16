@@ -34,6 +34,10 @@
         {
             "url": "[OBERON_API_URL]",
             "description": "Generated server url"
+        },
+        {
+            "url": "http://192.168.16.11:21044/",
+            "description": "Generated server url"
         }
     ],
     "security": [
