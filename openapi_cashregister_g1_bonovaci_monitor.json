@@ -37,7 +37,7 @@
         },
         {
             "url": "http://192.168.16.11:21044/",
-            "description": "Generated server url"
+            "description": "Mario local"
         }
     ],
     "security": [
