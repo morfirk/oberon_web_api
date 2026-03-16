@@ -5,8 +5,9 @@
     by Mario Moravcik - August 2025
     */  
     var eModule = (function () {
-        window.oberonWeb = eModule;        
-        eModule.salt = "";
+        window.oberonWeb = eModule;
+        window.oberonUser = {};
+        window.oberonData = "";
         eModule.url = "";       
         eModule.controls = {
             servers: null   
@@ -16,29 +17,55 @@
         function eModule(options) {            
         };
         
-        eModule.apiAuthenticate = function(userName, password) {            
-            //let param = { username: userName };
-            let param = { userName: userName };
+        eModule.apiLogout = function() {
+            localStorage.setItem("userData", "");
+            localStorage.setItem("userName", "");
+            localStorage.setItem("userPass", "");
+        };
+        
+        eModule.apiAuthenticate = function(swaggerSystem) {
             if(!eModule.controls.servers) {
                 eModule.controls.servers = document.querySelector('.servers select');
+            }          
+            window.oberonUser = { apiUrl: "", userName: "", password: "", token: "", salt: "" };
+            window.oberonUser.apiUrl = eModule.getUrl();
+            let userData = window.oberonUser;          
+            userData = loadUserData(userData);
+
+            if ( window.oberonUser.token !== null && window.oberonUser.token !== "" ) {
+                window.oberonUser = userData;
+                return true;
             }
+
+            userData = promptUser(userData);            
+            if ( userData.userName == "" || userData.userName.length == 0 ) {
+                return false;
+            }
+
+            let param = { userName: userData.userName };
+            
             var url = eModule.getUrl();
             eModule.apiCall(url + '/GetLoginSalt', param, eModule.evhLoginSalt);
-            if ( ! window.loginSalt ) {
+            if ( ! window.oberonData ) {
                 return false;
             }
+            userData.salt = window.oberonData;
 
-            let pass = window.loginSalt;
-            if(password && password.length > 0) pass += password;
-            pass = sha1(pass);
-
-            param = { loginData: { UserName: userName, Password: pass, LoginTag: 'OBERONWeb' } };
+            let pass = "";
+            if(userData.password && userData.password.length > 0) pass = sha1(userData.salt + userData.password);
+            
+            param = { loginData: { UserName: userData.userName, Password: pass, LoginTag: 'OBERONWeb' } };
             eModule.apiCall(url + '/LoginUserEx', param, eModule.evhLoginEx);
-            if ( ! window.userData ) {
+            if ( ! window.oberonData ) {
                 return false;
             }
+            userData.token = window.oberonData;
+            window.oberonUser = userData;
+            saveUserData(userData);            
             return true;
         };
+
+        
 
 
         eModule.apiCall = function(url, param, handlerMethod) {
@@ -59,16 +86,18 @@
         }
 
         eModule.evhLoginSalt = function(xhr) {
+            window.oberonData = "";
             let res = eModule.dataResult(xhr);
             if(res.result == true) {
-                window.loginSalt = res.data;
+                window.oberonData = res.data;
             }
 
         }
         eModule.evhLoginEx = function(xhr) {
+            window.oberonData = "";
             let res = eModule.dataResult(xhr);
             if(res.result == true) {
-                window.userData = res.data;               
+                window.oberonData = res.data;               
             }
 
         }
@@ -102,6 +131,30 @@
                 description: null,
                 data: null
             }
+        }
+
+        function loadUserData(userData) {
+            let oberonAuth =  localStorage.getItem("oberonAuth");
+            if ( oberonAuth && userData.apiUrl !== oberonAuth.apiUrl) {
+                console.log("Url sa nezhoduje s uloženými prihlasovacími údajmi. Prihlasujeme nanovo.")
+                return userData;
+            }            
+            userData.token = oberonAuth.token;
+            userData.userName = oberonAuth.userName;
+            userData.password = oberonAuth.password;
+            userData.salt = oberonAuth.salt;
+            return userData;
+        }
+
+        function saveUserData(userData) {
+            localStorage.setItem("oberonAuth", JSON.stringify(userData));
+            return userData;
+        }
+
+        function promptUser(userData) {
+            userData.userName = prompt("Enter username:");
+            userData.password = prompt("Enter password:");
+            return userData;
         }
 
         return eModule;

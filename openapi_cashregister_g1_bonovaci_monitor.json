@@ -75,7 +75,8 @@
                                 "properties": {
                                     "GetImages": {
                                         "type": "bool",
-                                        "description": "TRUE = vráti zoznam skupín v jedálnom lístku aj obrázkami (používanými v dotykovej pokladnici), FALSE - obrázky nebudú načítané."
+                                        "description": "TRUE = vráti zoznam skupín v jedálnom lístku aj obrázkami (používanými v dotykovej pokladnici), FALSE - obrázky nebudú načítané.",
+                                        "example": false
                                     }
                                 }                                
                             }
