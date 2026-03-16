@@ -1,0 +1,542 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "CashRegisterApi G1 (Bonovací monitor)",
+        "description": "Popis API pre použitie v súvislosti s bonovacím monitorom využíva OBERON CashRegister API G1. Povinné údaje sú označené '*' v sekci schém dokumentácie.",
+        "contact": {
+            "name": "EXALOGIC",
+            "url": "https://exalogic.sk/homepage/kontakty/",
+            "email": "exalogic@exalogic.sk",
+            "x-teams": "N/A",
+            "x-url": "https://exalogic.sk/homepage/kontakty/",
+            "x-email": "exalogic@exalogic.sk"
+        },
+        "version": "1.0",
+        "x-scope": "public",
+        "x-technologies": [
+            ".NET",
+            "MariaDB"
+        ],
+        "x-keywords": [
+            "e-pos",
+            "kds",
+            "bonovací monitor",
+            "monitor",
+            "pos",
+            "cash register",
+            "kitchen display"
+        ],
+        "x-related-masterdata": "article",
+        "x-solution": "OBERONCashRegisterG1KDS",
+        "x-git-url": ""
+    },
+    "servers": [
+        {
+            "url": "[OBERON_API_URL]",
+            "description": "Generated server url"
+        }
+    ],
+    "security": [
+        {
+            "UserTokenAuth": []
+        }
+    ],
+    "tags": [
+        {
+            "name": "BonovaciMonitor",
+            "description": "Metódy používané bonovacím monitorom."
+        },
+        {
+            "name": "System",
+            "description": "Systémové metódy API."
+        }
+    ],
+    "paths": {
+        "/GetMenuCategories": {
+            "post": {
+                "tags": [
+                    "BonovaciMonitor"
+                ],                
+                "operationId": "getMenuCategories",
+                "summary": "Vracia zoznam skupín v jedálnom lístku. Skupiny sa dajú vygenerovať aj so zoznamu skladových kariet (číselník položiek pre predaj), avšak tu je možné navyše získať aj obrázok danej skupiny. Obrázky skupín v jedálnom lístku sú napevno definované v číselníku, prípadne si používateľ môže zvoliť aj svoj vlastný obrázok.",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "GetImages"
+                                ],
+                                "properties": {
+                                    "GetImages": {
+                                        "type": "bool",
+                                        "description": "TRUE = vráti zoznam skupín v jedálnom lístku aj obrázkami (používanými v dotykovej pokladnici), FALSE - obrázky nebudú načítané."
+                                    }
+                                }                                
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Požiadavka bola spracovaná API. Výsledok spracovania a prípadné chyby sa nachádzajú v dátach.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetMenuCategoriesResult"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }, 
+        
+        "/GetOrders": {
+            "post": {
+                "tags": [
+                    "BonovaciMonitor"
+                ],                
+                "operationId": "getOrders",
+                "summary": "Vracia zoznam položiek zapísaných v bonovacej knihe - spravidla vytlačených na jednej alebo viacerých bonovacích tlačiarňach. Položky sú určené na prípravu, najčastejšie jedlá a nápoje. Spravidla vracia ešte nepripravené, alebo nevynesené, tzv. otvorené položky. Môže však vracať aj všetky položky od daného dátumu a času (záleží od parametra funkcie). Používa sa pre zobrazovanie položiek na displeji v kuchyni alebo predajnom mieste.",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",                                
+                                "$ref": "#/components/schemas/GetOrdersArg"                                
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Požiadavka bola spracovaná API. Výsledok spracovania a prípadné chyby sa nachádzajú v dátach.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetOrdersResult"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }, 
+        
+
+        "/ping": {
+            "get": {
+                "tags": [
+                    "System"
+                ],
+                "operationId": "systemPing",
+                "summary": "Overenie dostupnosti služby (vracia IP adresu požiadavky).",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string",
+                                    "description": "Služba vráti IP adresu klienta, od ktorého pochádza požiadavka.",
+                                    "example": "127.0.0.1"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/IsLogin": {
+            "get": {
+                "tags": [
+                    "System"
+                ],   
+                "operationId": "isLogin",
+                "summary": "Overenie stavu prihlásenia používateľa pomocou 'userData'.",
+                "parameters": [
+                    "ud"
+                ],
+                "responses": {
+                    "200": { 
+                        "description": "Požiadavka bola prijatá a spracovaná v API.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "bool",
+                                    "description": "true - ak je používateľ prihlásený."  
+                                }   
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/GetLoginSalt": {
+            "post": {
+                "tags": [
+                    "System"
+                ],
+                "operationId": "loginSalt",
+                "summary": "Vráti tzv. SALT, ktorý je používaný pri hashovaní hesla pri prihlásení používateľa.",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "username"
+                                ],
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "description": "Meno používateľa pre ktorý sa salt generuje a následne pri ďalšom prihlásení (metóda LoginUser) použije.",
+                                        "example": "admin"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ResultValueOf"
+                                        },
+                                        {                        
+                                            "properties": {
+                                                "data": {
+                                                    "type": "string",
+                                                    "description": "Obsahuje text saltu pre použitie pri prihlásení.",
+                                                    "example": "výsledná salt"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/LoginUserEx": {
+            "post": {
+                "tags": [
+                    "System"
+                ],
+                "operationId": "loginUserEx",
+                "summary": "Vráti tzv. SALT, ktorý je používaný pri hashovaní hesla pri prihlásení používateľa.",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "username"
+                                ],
+                                "properties": {
+                                    "username": {
+                                        "type": "object",
+                                        "description": "Údaje pre prihlásenie používateľa.",
+                                        "$ref": "#/components/schemas/LoginDataArg"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ResultValueOf"
+                                        },
+                                        {                        
+                                            "properties": {
+                                                "data": {
+                                                    "type": "string",
+                                                    "description": "Obsahuje údaje tokenu používateľa pri prihlásení. Token je nutné zasielať v hlavičke každej požiadavky 'userData' pre identifikáciu používateľa. "
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "UserTokenAuth" :{
+                "type": "apiKey",                
+                "in": "header",
+                "name": "userData"                
+            }
+        },
+        "schemas": { 
+            
+            "GetMenuCategoriesResult" : {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ResultValueOf"
+                    },
+                    {                        
+                        "properties": {
+                            "data": {
+                                "type": "array",
+                                "description": "Zoznam kategórií/skupín v jedálnom lístku.",
+                                "items": {
+                                    "$ref": "#/components/schemas/MenuCategory"
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            
+            "MenuCategory": {
+                "type": "object",
+                "description": "Informácie o kategórii/skupine v jedálneho lístka. Podľa daných kategórií sa vo fastfoodovej pokladnici členia skladové položky na skupiny.",
+                "required": [
+                    "Name"
+                ],
+                "properties": {
+                    "Name": {
+                        "type": "string",
+                        "description": "Názov skupiny v jedálnom lístku."
+                    },                    
+                    "ItemColor": {
+                        "type": "string",
+                        "description": "Farba skupiny - najčastejšie sa používa pre zobrazenie v zozname skupín na Pokladnici OBERON (BackColor), prípadne na externých zariadeniach ako napr. mobilný čašník. Vracia textovú hodnotu R;G;B alebo A;R;G;B, (napr. 255;255;255;255) , prípadne prázdnu hodnotu (ak farba nie je zadaná).",
+                        "example": "255;255;255;255"
+                    },
+                    "Image": {
+                        "type": "object",
+                        "description": "Pole bajtov obrázka."
+                    }                    
+                }
+            },
+
+
+            "GetOrdersArg": {
+                "description": "Argument funkcie pre načítanie (vyhľadanie) údajov existujúcej rezervácie ubytovania.",
+                "type": "object",
+                "required": [
+                    "FindBy",
+                    "FindByValue"
+                ],                
+                "properties": {
+                    "FindBy": {
+                        "type": "integer",
+                        "description": "Určuje druh hodnoty, podľa ktorej má byť vyhľadaná (načítaná) rezervácia. Hodnota sa nachádza v parametri 'FindByValue'.",
+                        "example": 1,
+                        "oneOf": [
+                            {
+                                "const": 0,
+                                "title": "IDNum",
+                                "description": "Jedinečný identifikátor v systéme OBERON používaný interne. Vyhľadanie rezervácie podľa interného čísla rezervácie je možné len pri službe, ktorá má nastavenie prihlasovania používateľov systému OBERON. Dôvodom je bezpečnosť - obmedzenie 'dolovania' údajov."
+                            },
+                            {
+                                "const": 1,
+                                "title": "GUID",
+                                "description": "Jedinečný verejný identifikátor záznamu rezervácie v systéme OBERON (náhodný reťazec). Môže sa napr. použiť ako direct link, kedy sa zašle hosťovi e-mailom a on môže prostredníctvom webovej aplikácie (formulára) zadať osobné údaje k rezervácii. Pri načítaní rezervácie pomocou GUID webová služba môže pracovať aj v režime bez autentifikácie."
+                            },
+                            {
+                                "const": 2,
+                                "title": "ReservationNumber",
+                                "description": "Číslo rezervácie v systéme OBERON. Vyhľadanie rezervácie podľa interného čísla rezervácie je možné len pri službe, ktorá má nastavenie prihlasovania používateľov systému OBERON. Dôvodom je bezpečnosť - obmedzenie 'dolovania' údajov."
+                            },
+                            {
+                                "const": 5,
+                                "title": "ExternalReservationNumber",
+                                "description": "Externé číslo rezervácie pochádzajúce z externého systému napr. 'Booking.com' (používateľovi je toto číslo prístupné vo formulári rezervácie). Vyhľadanie rezervácie podľa externého čísla rezervácie je možné len pri službe, ktorá má nastavenie prihlasovania používateľov systému OBERON. Dôvodom je bezpečnosť - obmedzenie 'dolovania' údajov."
+                            }
+                        ]
+                    },
+                    "FindByValue": {
+                        "type": "string",
+                        "description": "Hodnota pre načítanie (vyhľadanie) rezervácie ubytovania - typ hodnoty určuje parameter 'FindBy'.",
+                        "example": "e2ae6143-cbcf-4cfa-86e8-98a23d733bfe"
+                    }
+                }
+            },
+            "GetOrdersResult": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ResultValueOf"
+                    },
+                    {                        
+                        "properties": {
+                            "data": {
+
+                                "$ref": "#/components/schemas/HotelReservation"
+                            }
+                        }
+                    }
+                ]
+            },
+            
+            
+            "LoginDataArg" : {
+                "type": "object",
+                "description": "Parameter metódy pre prihlásenie používateľa.",
+                "required": [
+                    "UserName",
+                    "Password"
+                ],
+                "properties": {
+                    "UserName": {
+                        "type": "string",
+                        "description": "Meno používateľa."
+                    },
+                    "Password": {
+                        "type": "string",
+                        "description": "Hash hesla (typu SHA-1), prípadne hash hesla obohatený o SALT (k salt-u sa pripojí heslo a následne sa vytvorí hash, salt je možné získať metódou GetLoginSalt). V odôvodnených prípadoch je možné zasielať heslo aj ako čistý text, znižuje to však bezpečnosť webovej služby (umožňuje útočníkovi získať heslo - záleží však aj na nastavení spôsobu zabezpečenia webovej služby)."
+                    },
+                    "PasswordType": {
+                        "type": "number",
+                        "description": "Určuje druh použitého hesla.",
+                        "$ref": "#/components/schemas/LoginDataPasswordTypeEnum",
+                        "example": "0"
+                    },
+                    "LoginTag": {
+                        "type": "string",
+                        "description": "Ľubovoľná textová hodnota - danú hodnotu si webová služba uloží. Tým je možné napr. overiť zoznam pripojených externých zariadení do webovej služby. V režime hosťa v reštaurácii alebo donášky tu treba uviesť tzv. DeviceID - jednoznačný identifikátor zariadenia, ktoré komunikuje s webovou službou. V metóde 'SetNewBillOpen(BillOpen, Boolean)' sa potom overuje, či k už danému zariadeniu neexistuje otvorený účet (jedno zariadnie /DeviceID/) môže mať v jednej chvíli otvorený len jeden účet."
+                    },
+                    "ApplicationName": {
+                        "type": "string",
+                        "description": "Pomenovanie aplikácie, ktorá sa pripája k webovej službe. Načítať zoznam prihlasených aplikácií (a používateľov) je možné pomocou funkcie 'GetUsersLoggedOnWebService'. Tým je možné napr. overiť zoznam pripojených externých zariadení do webovej služby.",
+                        "example": "BonovaciMonitor" 
+                    },
+                    "ApplicationVersion": {
+                        "type": "string",
+                        "description": "Číslo verzie aplikácie, ktorá sa pripája k webovej službe (odporúčame vo formáte x.x.x). Načítať zoznam prihlasených aplikácií (a používateľov) je možné pomocou funkcie 'GetUsersLoggedOnWebService'. Tým je možné napr. overiť zoznam pripojených externých zariadení do webovej služby.",
+                        "example": "0.9.9" 
+                    },
+                    "DataLangCode": {
+                        "type": "string",
+                        "description": "Je možné zadať dvojmiestny kód jazyka pre preklad údajov (sk, en, de a pod.).",
+                        "example": "sk"                        
+                    }
+                }                
+            },
+            "LoginDataPasswordTypeEnum": {
+                "type": "enum",
+                "description": "Určuje druh hesla použitého pri prhlásení.",
+                "oneOf": [
+                    {
+                        "const": 0,
+                        "title": "Standard - štandardné heslo používateľa systému OBERON. Tu je pri prihlásení potrebné poznať a zadať aj prihlasovacie meno.."
+                    },
+                    {
+                        "const": 1,
+                        "title": "PIN - prihlásenie pomocou PIN, ktoré sa zadáva do poľa <i>Kód prístupového kľúča</i>. Pri tomto type zadaného hesla nie je potrebné zadávať prihlasovacie meno (meno používateľa systému OBERON). PIN musí byť z tohto dôvodu v rámci jednej databázy jedinečná hodnota. Prihlásenie pomocou PIN-u odporúčame využiť len na identifikáciu používateľa, externá aplikácia by mala vykonať prihlásenie aj pomocou uloženého mena a silného hesla."
+                    },
+                    {
+                        "const": 9,
+                        "title": "Everyone - do webovej služby sa môže prihlásiť ktokoľvek - neoveruje sa žiadne heslo. Meno používateľa by malo byť jedinečné, napr. identifikátor zariadenia, e-mailová adresa a podobne. Prihlásenie sa používa len v režime hosť v reštaurácii, slúži na identifikáciu otvoreného účtu na stole, t.j. aby sa hosť mohol dostať ku svojmu účtu aj keď reštartuje aplikáciu."
+                    }
+                ]
+            },
+
+            "RecordBaseInfo" : {
+                "type": "object",
+                "description": "Spravidla sa používa v návratovej hodnote 'ResultValueOf' vo vlastnosti Data (Data As RecordBaseInfo). Je využívaná hlavne ako časť návratovej hodnoty pri metódach, ktoré vytvárajú nové záznamy - po vytvorení záznamu sa vracia jeho jednoznačný identifikátor a napr. číslo dokladu.",
+                "properties": {
+                    "IDNum": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor nového záznamu."
+                    },
+                    "GUID": {
+                        "type": "string",
+                        "description": "Jednoznačný identifikátor typu GUID nového záznamu, ak evidencia podporuje daný typ identifikátora."
+                    },
+                    "Value": {
+                        "type": "string",
+                        "description": "Spravidla číslo nového záznamu, napr. pri objednávke číslo novej vytvorenej objednávky."
+                    },
+                    "Info": {
+                        "type": "string",
+                        "description": "Ďalšie doplňujúce info k novovytvorenému záznamu."
+                    },
+                    "state": {
+                        "type": "integer",
+                        "description": "Stav záznamu po spracovaní požiadavky (napr. pri novo vytvorenom zázname 'Created').",
+                        "oneOf": [
+                            {
+                                "const": 0,
+                                "title": "Uknown - neznámy stav."
+                            },
+                            {
+                                "const": 1,
+                                "title": "Created - záznam bol vytvorený."
+                            },
+                            {
+                                "const": 2,
+                                "title": "Modified - záznam bol aktualizovaný."
+                            },
+                            {
+                                "const": 5,
+                                "title": "Deleted - záznam bol vymazaný."
+                            },
+                            {
+                                "const": 5,
+                                "title": "Errored - nejaká chyba pri spracovaní (bližší popis by mal byť dostupný v parametri 'Info')."
+                            },
+                            {
+                                "const": 5,
+                                "title": "NotFound - záznam nebol nájdený."
+                            }
+                        ]
+                    }
+                }                
+            },
+            "ResultValueOf" : {
+                "type": "object",
+                "description": "Základný objekt výsledku volaných metód API obsahuje údaje s pracovaní. Samotné výsledné data sa nachádzajú v parametri 'data', ktorého typ určruje volaná API metóda. Objekt je dedený vo výsledných objektov metód.",
+                "properties": {
+                    "result": {
+                        "type": "bool",
+                        "description": "Výsledok volanej metódy, result = TRUE - metóda bola úspešná, result = FALSE - metóda bola neúspešná.",
+                        "example": false
+                    },
+                    "errNumber": {
+                        "type": "integer",
+                        "description": "Kód chyby, vrátený API prípadne niektorou z interne volaných funkcií."
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Popis chyby."
+                    },
+                    "data": {
+                        "type": "object",
+                        "description": "Druh objektu výsledku určuje volaná API metóda."
+                    }
+                }                
+            }            
+        }
+    }
+}

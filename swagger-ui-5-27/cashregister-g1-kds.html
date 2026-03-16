@@ -1,0 +1,77 @@
+<!-- HTML for static distribution bundle build -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Swagger UI</title>
+    <link rel="stylesheet" type="text/css" href="./swagger-ui.css" />
+    <link rel="stylesheet" type="text/css" href="./index.css" />
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABNVBMVEVisTRhsTReqzVbpTVXoDdVnTdSlzhRljgvXkAuXUAtWkErV0EzZj40Zj85bz0lTkMkTUMkT0MmTUIkS0IjTEIhSUMkS0IkTEIkTUIlTUIkTkMlTkMcQUQcP0UfQ0QdQ0QfREQgRUMiSUMiSUMjSkInU0EkTEMmUEEiR0IiSEMpVkErWT8kTUElTUIUNkYVNEQVMkcRM0QSNUYQMUIMMUkVK0AAJEkAM00AMzMAAAAAAACF6i2E6SyD6CyC5i2B5Sx/4i6A4S593S583S520jB00DByyjFxyTFwyDFvxjJtxTFtxDFswzJrwDJqvzJpvjNouzNoujNnuDNLjTlKijpKiTpEfztDfzxAeT0+dz05bj44bT44bj82aj81aD8zZT8bPUUbPkUcP0UcPUUeQ0UfREQgRkRgJREvAAAAO3RSTlP09PX19vX39u7u7/Dq6ufh4eDg4+Pf3Nvb2tnY2NvPv7y6rKupqaGZlpSOiYWETDEkHh0fFQwHCgUBAAcHrskAAADYSURBVHjaPc/ZLkNRGIbhz26KjVJpqSKGtjHPc9a7W7OEEhtBjDWUO3XghqQSwVrNTp+j///OXhlrLpdJdg9MLblbxqwPd5RLUDpOjK66YWMwTqRpaM0OhZbo3dskljea9+HyAevxHtoWVAjhfQtr5w3CSfUE8BrgvEDQpxRc3eyfH5wenlQuIO39Sb9x/8uv+bXvmPSjbABPRZznIkGvxkOo7mJtV+FsQsutcFvBuruG9kWZMY+G5pzxlMp/KPKZSUs2cLrzyMWVEyP1OGtlNpvs6p+p5/8DzUo5hMDku9EAAAAASUVORK5CYII=" sizes="16x16" />
+  </head>
+
+  <body>
+    <div id="swagger-ui"></div>
+    <script src="./swagger-ui-bundle.js" charset="UTF-8"> </script>
+    <script src="./swagger-ui-standalone-preset.js" charset="UTF-8"> </script>
+    <script src="./js-sha-1.js" charset="UTF-8"> </script>
+    <script src="./js-oberonweb-auth-g1.js" charset="UTF-8"> </script>
+    <script>
+        
+window.onload = function () {
+    //<editor-fold desc="Changeable Configuration Block">
+   
+    window.loginSalt = "";
+    window.userData = "";
+    
+    window.ui = SwaggerUIBundle({
+        urls: [ 
+            { url: window.location.origin + "/openapi_cashregister_g1_bonovaci_monitor.json", name: "Bonovacií Monitor" },
+         ],
+        dom_id: '#swagger-ui',
+        deepLinking: true,
+        supportHeaderParams: true,
+        presets: [
+            SwaggerUIBundle.presets.apis,
+            SwaggerUIStandalonePreset
+        ],
+        plugins: [
+            SwaggerUIBundle.plugins.DownloadUrl,
+            OberonWebAuthorizePlugin
+        ],
+        layout: "StandaloneLayout",
+        supportedSubmitMethods: ['get', 'post']        
+    });
+
+
+    // OBERON Login plugin for SWAGGER to enable authorization
+    function OberonWebAuthorizePlugin() {
+        return {
+            statePlugins: {
+                auth: {
+                    wrapActions: {
+                        authorize: (oriAction, system) => (auth) => {
+                            const username = prompt("Enter username:");
+                            const password = prompt("Enter password:");
+                            
+                            window.oberonWeb.apiAuthenticate( username, password);
+
+                            return oriAction({
+                                UserTokenAuth: {
+                                    name: "userData",
+                                    schema: { type: "apiKey", in: "header", name: "userData" },
+                                    value: window.userData
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        };   
+    }
+
+    //</editor-fold>
+};
+
+    </script>
+  </body>
+</html>
