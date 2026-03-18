@@ -14,6 +14,3 @@ body {
     margin: 0;
     background: #fafafa;
 }
-.swagger-ui .renderedMarkdown blockquote p strong {
-    color: #f009 !important;
-}

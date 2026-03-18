@@ -5,10 +5,8 @@
     by Mario Moravcik - August 2025
     */  
     var eModule = (function () {
-        window.oberonWeb = eModule;
-        window.oberonUser = {};
-        window.oberonData = "";
-        eModule.url = "";       
+        window.oberonWeb = eModule;   
+        window.oberonUser = { apiUrl: "", userName: "", password: "", token: "", salt: "" };
         eModule.controls = {
             servers: null   
         }
@@ -18,12 +16,10 @@
         };
         
         eModule.apiLogout = function() {
-            localStorage.setItem("userData", "");
-            localStorage.setItem("userName", "");
-            localStorage.setItem("userPass", "");
+            localStorage.setItem("oberonAuth", "");
         };
-        
-        eModule.apiAuthenticate = function(swaggerSystem) {
+
+        eModule.apiAuthenticate = function(userName, password) {            
             if(!eModule.controls.servers) {
                 eModule.controls.servers = document.querySelector('.servers select');
             }          
@@ -64,8 +60,6 @@
             saveUserData(userData);            
             return true;
         };
-
-        
 
 
         eModule.apiCall = function(url, param, handlerMethod) {
@@ -135,7 +129,13 @@
 
         function loadUserData(userData) {
             let oberonAuth =  localStorage.getItem("oberonAuth");
-            if ( oberonAuth && userData.apiUrl !== oberonAuth.apiUrl) {
+            if ( ! oberonAuth || oberonAuth.length === 0 ) {
+                return userData;
+            }
+            try {
+                oberonAuth = JSON.parse(oberonAuth);
+            } catch {}
+            if ( ! oberonAuth || userData.apiUrl !== oberonAuth.apiUrl) {
                 console.log("Url sa nezhoduje s uloženými prihlasovacími údajmi. Prihlasujeme nanovo.")
                 return userData;
             }            

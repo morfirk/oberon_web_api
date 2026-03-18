@@ -2,7 +2,7 @@
     "openapi": "3.1.0",
     "info": {
         "title": "CashRegisterApi G1 (Bonovací monitor)",
-        "description": "Popis API pre použitie v súvislosti s bonovacím monitorom využíva OBERON CashRegister API G1. Povinné údaje sú označené '*' v sekci schém dokumentácie.",
+        "description": "Popis API pre použitie v súvislosti s bonovacím monitorom využíva OBERON CashRegister API G1.<br/> Povinné údaje sú označené '*' v sekci schém dokumentácie. <br/>Formát dátumu 'yyyy-MM-ddThh:mm:ss' (dátum '0001-01-01T00:00:00' sa považuje za nezadaný).",
         "contact": {
             "name": "EXALOGIC",
             "url": "https://exalogic.sk/homepage/kontakty/",
@@ -34,10 +34,6 @@
         {
             "url": "[OBERON_API_URL]",
             "description": "Generated server url"
-        },
-        {
-            "url": "http://192.168.16.11:21044/",
-            "description": "Mario local"
         }
     ],
     "security": [
@@ -60,7 +56,7 @@
             "post": {
                 "tags": [
                     "BonovaciMonitor"
-                ],                
+                ],
                 "operationId": "getMenuCategories",
                 "summary": "Vracia zoznam skupín v jedálnom lístku. Skupiny sa dajú vygenerovať aj so zoznamu skladových kariet (číselník položiek pre predaj), avšak tu je možné navyše získať aj obrázok danej skupiny. Obrázky skupín v jedálnom lístku sú napevno definované v číselníku, prípadne si používateľ môže zvoliť aj svoj vlastný obrázok.",
                 "parameters": [],
@@ -74,11 +70,11 @@
                                 ],
                                 "properties": {
                                     "GetImages": {
-                                        "type": "bool",
+                                        "type": "boolean",
                                         "description": "TRUE = vráti zoznam skupín v jedálnom lístku aj obrázkami (používanými v dotykovej pokladnici), FALSE - obrázky nebudú načítané.",
                                         "example": false
                                     }
-                                }                                
+                                }
                             }
                         }
                     },
@@ -97,13 +93,12 @@
                     }
                 }
             }
-        }, 
-        
+        },
         "/GetOrders": {
             "post": {
                 "tags": [
                     "BonovaciMonitor"
-                ],                
+                ],
                 "operationId": "getOrders",
                 "summary": "Vracia zoznam položiek zapísaných v bonovacej knihe - spravidla vytlačených na jednej alebo viacerých bonovacích tlačiarňach. Položky sú určené na prípravu, najčastejšie jedlá a nápoje. Spravidla vracia ešte nepripravené, alebo nevynesené, tzv. otvorené položky. Môže však vracať aj všetky položky od daného dátumu a času (záleží od parametra funkcie). Používa sa pre zobrazovanie položiek na displeji v kuchyni alebo predajnom mieste.",
                 "parameters": [],
@@ -111,8 +106,13 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",                                
-                                "$ref": "#/components/schemas/GetOrdersArg"                                
+                                "type": "object",
+                                "properties": {
+                                    "Arg": {
+                                        "type": "object",
+                                        "$ref": "#/components/schemas/GetOrdersArg"
+                                    }
+                                }                                
                             }
                         }
                     },
@@ -131,7 +131,110 @@
                     }
                 }
             }
-        }, 
+        },
+        "/SetOrderVisibleIndex": {
+            "post": {
+                "tags": [
+                    "BonovaciMonitor"
+                ],
+                "operationId": "setOrderVisibleIndex",
+                "summary": "Umožňuje zmeniť poradie objednávky v zozname napr. pri zobrazení na displeji (bonovacia obrazovka v kuchyni).",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "Arg": {
+                                        "type": "object",
+                                        "$ref": "#/components/schemas/SetOrderVisibleIndexArg"
+                                    }
+                                }                                
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Požiadavka bola spracovaná API. Výsledok spracovania a prípadné chyby sa nachádzajú v dátach.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultValueOfString"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/SetOrderItemDateTimeTakeOut": {
+            "post": {
+                "tags": [
+                    "BonovaciMonitor"
+                ],
+                "operationId": "setOrderItemDateTimeTakeOut",
+                "summary": "Zapíše príznak ukončenia prípravy jedla alebo nápoja na položku do bonovacej knihy (zapisuje sa aktuálny serverový dátum a čas). V prípade potreby aj zruší tento príznak.",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SetOrderItemDateTimeTakeOutArg"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Požiadavka bola spracovaná API. Výsledok spracovania a prípadné chyby sa nachádzajú v dátach.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultValueOfString"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/SetOrderItemDateTimeDelivery": {
+            "post": {
+                "tags": [
+                    "BonovaciMonitor"
+                ],
+                "operationId": "setOrderItemDateTimeDelivery",
+                "summary": "Zapíše príznak dodania jedla alebo nápoja na položku do bonovacej knihy (zapisuje sa aktuálny serverový dátum a čas). V prípade potreby aj zruší tento príznak.",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SetOrderItemDateTimeDeliveryArg"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Požiadavka bola spracovaná API. Výsledok spracovania a prípadné chyby sa nachádzajú v dátach.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultValueOfString"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
         
 
         "/ping": {
@@ -161,21 +264,21 @@
             "get": {
                 "tags": [
                     "System"
-                ],   
+                ],
                 "operationId": "isLogin",
                 "summary": "Overenie stavu prihlásenia používateľa pomocou 'userData'.",
                 "parameters": [
                     "ud"
                 ],
                 "responses": {
-                    "200": { 
+                    "200": {
                         "description": "Požiadavka bola prijatá a spracovaná v API.",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "bool",
-                                    "description": "true - ak je používateľ prihlásený."  
-                                }   
+                                    "type": "boolean",
+                                    "description": "true - ak je používateľ prihlásený."
+                                }
                             }
                         }
                     }
@@ -220,7 +323,7 @@
                                         {
                                             "$ref": "#/components/schemas/ResultValueOf"
                                         },
-                                        {                        
+                                        {
                                             "properties": {
                                                 "data": {
                                                     "type": "string",
@@ -275,7 +378,7 @@
                                         {
                                             "$ref": "#/components/schemas/ResultValueOf"
                                         },
-                                        {                        
+                                        {
                                             "properties": {
                                                 "data": {
                                                     "type": "string",
@@ -294,20 +397,19 @@
     },
     "components": {
         "securitySchemes": {
-            "UserTokenAuth" :{
-                "type": "apiKey",                
+            "UserTokenAuth": {
+                "type": "apiKey",
                 "in": "header",
-                "name": "userData"                
+                "name": "userData"
             }
         },
-        "schemas": { 
-            
-            "GetMenuCategoriesResult" : {
+        "schemas": {
+            "GetMenuCategoriesResult": {
                 "allOf": [
                     {
                         "$ref": "#/components/schemas/ResultValueOf"
                     },
-                    {                        
+                    {
                         "properties": {
                             "data": {
                                 "type": "array",
@@ -320,7 +422,6 @@
                     }
                 ]
             },
-            
             "MenuCategory": {
                 "type": "object",
                 "description": "Informácie o kategórii/skupine v jedálneho lístka. Podľa daných kategórií sa vo fastfoodovej pokladnici členia skladové položky na skupiny.",
@@ -331,59 +432,39 @@
                     "Name": {
                         "type": "string",
                         "description": "Názov skupiny v jedálnom lístku."
-                    },                    
+                    },
                     "ItemColor": {
                         "type": "string",
                         "description": "Farba skupiny - najčastejšie sa používa pre zobrazenie v zozname skupín na Pokladnici OBERON (BackColor), prípadne na externých zariadeniach ako napr. mobilný čašník. Vracia textovú hodnotu R;G;B alebo A;R;G;B, (napr. 255;255;255;255) , prípadne prázdnu hodnotu (ak farba nie je zadaná).",
                         "example": "255;255;255;255"
                     },
                     "Image": {
-                        "type": "object",
-                        "description": "Pole bajtov obrázka."
-                    }                    
+                        "type": "array",
+                        "description": "Pole bajtov obrázka.",
+                        "items": {
+                            "type": "number"
+                        }
+                    }
                 }
             },
 
-
             "GetOrdersArg": {
-                "description": "Argument funkcie pre načítanie (vyhľadanie) údajov existujúcej rezervácie ubytovania.",
+                "description": "Argument funkcie pre načítanie položiek z bonovacej knihy. Spravidla vracia položky, ktoré neboli pripravené (vyrobené), prípadne vynesené - záleží na parametri 'HistoryInterval'.",
                 "type": "object",
-                "required": [
-                    "FindBy",
-                    "FindByValue"
-                ],                
+                "required": [],
                 "properties": {
-                    "FindBy": {
-                        "type": "integer",
-                        "description": "Určuje druh hodnoty, podľa ktorej má byť vyhľadaná (načítaná) rezervácia. Hodnota sa nachádza v parametri 'FindByValue'.",
-                        "example": 1,
-                        "oneOf": [
-                            {
-                                "const": 0,
-                                "title": "IDNum",
-                                "description": "Jedinečný identifikátor v systéme OBERON používaný interne. Vyhľadanie rezervácie podľa interného čísla rezervácie je možné len pri službe, ktorá má nastavenie prihlasovania používateľov systému OBERON. Dôvodom je bezpečnosť - obmedzenie 'dolovania' údajov."
-                            },
-                            {
-                                "const": 1,
-                                "title": "GUID",
-                                "description": "Jedinečný verejný identifikátor záznamu rezervácie v systéme OBERON (náhodný reťazec). Môže sa napr. použiť ako direct link, kedy sa zašle hosťovi e-mailom a on môže prostredníctvom webovej aplikácie (formulára) zadať osobné údaje k rezervácii. Pri načítaní rezervácie pomocou GUID webová služba môže pracovať aj v režime bez autentifikácie."
-                            },
-                            {
-                                "const": 2,
-                                "title": "ReservationNumber",
-                                "description": "Číslo rezervácie v systéme OBERON. Vyhľadanie rezervácie podľa interného čísla rezervácie je možné len pri službe, ktorá má nastavenie prihlasovania používateľov systému OBERON. Dôvodom je bezpečnosť - obmedzenie 'dolovania' údajov."
-                            },
-                            {
-                                "const": 5,
-                                "title": "ExternalReservationNumber",
-                                "description": "Externé číslo rezervácie pochádzajúce z externého systému napr. 'Booking.com' (používateľovi je toto číslo prístupné vo formulári rezervácie). Vyhľadanie rezervácie podľa externého čísla rezervácie je možné len pri službe, ktorá má nastavenie prihlasovania používateľov systému OBERON. Dôvodom je bezpečnosť - obmedzenie 'dolovania' údajov."
-                            }
-                        ]
+                    "PrinterNumbers": {
+                        "type": "array",
+                        "description": "Zoznam bonovacích tlačiarní (čísla), ktorých položky sa majú vrátiť. Ak nebude zadaná žiadna tlačiareň, budú vrátené položky určené pre všetky bonovacie tlačiarne.",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "example": [1,2,3]
                     },
-                    "FindByValue": {
-                        "type": "string",
-                        "description": "Hodnota pre načítanie (vyhľadanie) rezervácie ubytovania - typ hodnoty určuje parameter 'FindBy'.",
-                        "example": "e2ae6143-cbcf-4cfa-86e8-98a23d733bfe"
+                    "HistoryInterval": {
+                        "type": "number",
+                        "description": "Zadáva sa počet sekúnd (nepovinný parameter - môže byť nulový). Ak bude parameter zadaný, metóda vráti aj záznamy, ktoré už boli pripravené a vynesené a to posledných počet sekúnd (od aktuálneho času). Tým je možné získať záznamy, ktoré boli bezprostredne pripravené/vynesené a v prípade potreby umožniť používateľovi zrušiť príznak pripravenia/vynesenia.",
+                        "example": 20
                     }
                 }
             },
@@ -392,19 +473,389 @@
                     {
                         "$ref": "#/components/schemas/ResultValueOf"
                     },
-                    {                        
+                    {
                         "properties": {
                             "data": {
-
-                                "$ref": "#/components/schemas/HotelReservation"
+                                "$ref": "#/components/schemas/GetOrdersReturnValue"
                             }
                         }
                     }
                 ]
             },
-            
-            
-            "LoginDataArg" : {
+            "GetOrdersReturnValue": {
+                "type": "object",
+                "description": "Návratová hodnota pre získanie položiek z bonovacej knihy. Spravidla vracia položky, ktoré neboli pripravené (uvarené), prípadne vynesené.",
+                "required": [
+                    "Orders",
+                    "OrderSummaryItems"
+                ],
+                "properties": {
+                    "Orders": {
+                        "type": "array",
+                        "description": "Zoznam objednávok. Obsahuje hlavičky a každá hlavička aj položky objednávky.",
+                        "items": {
+                            "$ref": "#/components/schemas/CashRegisterOrder"
+                        }
+                    },
+                    "OrderSummaryItems": {
+                        "type": "string",
+                        "description": "Zoznam zoskupených položiek, ktoré ešte neboli pripravené, tzv. SUMMARY INFO. Pozor! Vynesené (dodané) ešte nemuseli byť - sú tu len také, ktoré treba pripraviť.",
+                        "items": {
+                            "$ref": "#/components/schemas/CashRegisterOrderSummaryItem"
+                        }
+                    }
+                }
+            },
+            "CashRegisterOrder": {
+                "type": "object",
+                "description": "Hlavička objednávky v bonovacej knihe. Obsahuje základné údaje objednávky a zoznam položiek. Hlavička objednávky v databáze fyzicky neexistuje, je len virtuálna a generuje sa z položiek.",
+                "required": [
+                    "OrderNumber"
+                ],
+                "properties": {
+                    "OrderNumberForSummary": {
+                        "type": "string",
+                        "description": "Hlavné číslo objednávky - pre zoskupovanie."
+                    },
+                    "OrderNumber": {
+                        "type": "string",
+                        "description": "Číslo objednávky - zobrazuje hlavné číslo objednávky, v prípade ak monitor zobrazuje údaje za viac bonovacích tlačiarní, zobrazuje kombinované číslo objednávky.",
+                        "example": "123"
+                    },
+                    "BillOpen_Number": {
+                        "type": "integer",
+                        "description": "Číslo otvoreného účtu (definície otvoreného účtu/stola), na ktorom bola položka vytvorená."
+                    },
+                    "BillOpen_Name": {
+                        "type": "string",
+                        "description": "Názov otvoreného účtu, na ktorom bola položka vytvorená. Uvádza sa len základný názov (nie číslo podstola)."
+                    },
+                    "User_Add": {
+                        "type": "string",
+                        "description": "Skratka mena používateľa, ktorý vytvoril objednávku.",
+                        "example": "A"
+                    },
+                    "DateTimeOrder": {
+                        "type": "string",
+                        "description": "Dátum a čas vytvorenia objednávky.",
+                        "example": ""
+                    },
+                    "DateTimeTakeOut": {
+                        "type": "string",
+                        "description": "Dátum a čas ukončenia prípravy jedla alebo nápoja celej objednávky - pripravené na výdaj/doručenie (obslúženie) zákazníkovi.",
+                        "example": ""
+                    },
+                    "DateTimeDelivery": {
+                        "type": "string",
+                        "description": "Dátum a čas dodania celej objednávky - skutočného obslúženia zákazníka, prípadne dátum a čas donášky (fyzického prevzatia).",
+                        "example": ""
+                    },
+                    "VisibleIndex": {
+                        "type": "integer",
+                        "description": "Index zobrazenie položky na displeji. Metóda vracia objednávky v poradí už podľa indexu zobrazenia, tento údaj má len informačný charakter. Metóda 'SetOrderVisibleIndex' umožňuje posúvať objednávky na displeji."
+                    },
+                    "Items": {
+                        "type": "array",
+                        "description": "Položky objednávky.",
+                        "items": {
+                            "$ref": "#/components/schemas/CashRegisterOrderItem"
+                        }
+                    }
+                }
+            },
+            "CashRegisterOrderItem": {
+                "type": "object",
+                "description": "Informácie o kategórii/skupine v jedálneho lístka. Podľa daných kategórií sa vo fastfoodovej pokladnici členia skladové položky na skupiny.",
+                "required": [
+                    "ID"
+                ],
+                "properties": {
+                    "ID": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor položky v databáze - slúži na aktualizovanie záznamov."
+                    },
+                    "IDNum_BillItem": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor položky - preberá sa z položky otvoreného účtu (stola). Používa sa napr. v metódach 'SetOrderItemDateTimeDelivery', 'SetOrderItemDateTimeTakeOut'."
+                    },
+                    "IDNumStock": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor skladu danej skladovej karty v systéme OBERON. Ak nebude zadaný, položka sa bude považovať za neskladovú - takáto položka neovplyvní stavy zásob na sklade."
+                    },
+                    "IDNumStockCard": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor skladovej karty v systéme OBERON. Ak nebude zadaný, položka sa bude považovať za neskladovú - takáto položka neovplyvní stavy zásob na sklade."
+                    },
+                    "ItemType": {
+                        "type": "enum",
+                        "description": "Typ položky v bonovacej knihe - objednávka, alebo storno.",
+                        "oneOf": [
+                            {
+                                "const": 0,
+                                "title": "Order - objednávka do kuchyne."
+                            },
+                            {
+                                "const": 1,
+                                "title": "Annulment - storno objednávky."
+                            }
+                        ]
+                    },
+                    "BillOpen_Number": {
+                        "type": "integer",
+                        "description": "Číslo otvoreného účtu (definície otvoreného účtu/stola), na ktorom bola položka vytvorená."
+                    },
+                    "BillOpen_Name": {
+                        "type": "string",
+                        "description": "Názov otvoreného účtu, na ktorom bola položka vytvorená. Uvádza sa len základný názov (nie číslo podstola)."
+                    },
+                    "BillOpen_SubBillName": {
+                        "type": "string",
+                        "description": "Názov podúčtu - môže sa zadať číslo alebo ľubovolný text, ktorý bližšie určuje otvorený účet. V reštauračnej prevádzke to môže byť názov podstola (ak je na stole otvorených viac účtov), v bežnej obchodnej prevádzke to môže byť číslo nákupného košíka. Údaj je nepovinný,         ''' ak nebude zadaný, pri vytvorení účtu ho môže obsluha zadať manuálne."
+                    },
+                    "DateTimeOrder": {
+                        "type": "string",
+                        "description": "Dátum a čas vytvorenia položky.",
+                        "example": ""
+                    },
+                    "DateTimeTakeOut": {
+                        "type": "string",
+                        "description": "Dátum a čas ukončenia prípravy položky - pripravené na výdaj/doručenie (obslúženie) zákazníkovi.",
+                        "example": ""
+                    },
+                    "DateTimeDelivery": {
+                        "type": "string",
+                        "description": "Dátum a čas dodania položky - skutočného obslúženia zákazníka, prípadne dátum a čas donášky (fyzického prevzatia).",
+                        "example": ""
+                    },
+                    "Number": {
+                        "type": "string",
+                        "description": "Číslo skladovej položky (skladovej karty)."
+                    },
+                    "Name": {
+                        "type": "string",
+                        "description": "Názov položky."
+                    },
+                    "CashRegisterCode": {
+                        "type": "string",
+                        "description": "Číslo (kód) položky pre Pokladnicu OBERON.",
+                        "example": "101"
+                    },
+                    "Amount": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Množstvo položky v danej mernej jednotke.",
+                        "example": "2"
+                    },
+                    "Unit": {
+                        "type": "string",
+                        "description": "Merná jednotka. Ak sa na položke používa aj alternatívna MJ (ak je tak nastavené na skladovej karte), tu je použitá alternatívna, pričom množstvo je uvádzané z hľadiska alternatívnej MJ, napr. Vodka 1 ks = 0.04 l.",
+                        "example": "ks"
+                    },
+                    "PriceWithVATUnit": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Jednotková cena s DPH za danú mernú jednotku. Ak sa na položke používa alternatívna MJ, cena je uvádzaná za alternatívnu MJ.",
+                        "example": "5.12"
+                    },
+                    "PriceWithVAT": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Celková cena za položku s DPH.",
+                        "example": "10.24"
+                    },
+                    "VatRate": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Sadzba DPH položky objednávky.",
+                        "example": "5.12"
+                    },
+                    "Preparation_Printer": {
+                        "type": "number",
+                        "format": "byte",
+                        "description": "Číslo bonovacej tlačiarne pre objednávanie jedál (nápojov) pre tlač štandardnej objednávky (nie kópie), na ktorej bola položka vytlačená.",
+                        "example": "1"
+                    },
+                    "Preparation_PrinterCopy": {
+                        "type": "number",
+                        "format": "byte",
+                        "description": "Číslo bonovacej tlačiarne pre objednávanie jedál (nápojov) pre tlač kópie objednávky, na ktorej bola položka vytlačená (ak je zadaná nula tak nie je kópia).",
+                        "example": "0"
+                    },
+                    "Notice": {
+                        "type": "string",
+                        "description": "Poznámka k položke určená pre tlač na bonovacej tlačiarni, napr. biftek medium."
+                    },
+                    "CourseSeparatorAfter": {
+                        "type": "boolean",
+                        "description": "Príznak oddeľovača chodov. TRUE = za touto položkou by mal nasledovať oddeľovač chodov."
+                    },
+                    "MenuCategory": {
+                        "type": "string",
+                        "description": "Kategória/skupina v jedálnom lístku. Skupina sa používa aj vo fastfoodovej pokladnici na členenie položiek do skupín."
+                    },
+                    "ExternalSystemData": {
+                        "type": "string",
+                        "description": "Údaje externého systému, ktorý aktívne pracuje s položkami."
+                    },
+                    "UserAdd": {
+                        "type": "string",
+                        "description": "Skratka používateľa, ktorý položku vytvoril (zadal).",
+                        "example": "A"
+                    },
+                    "VisibleIndex": {
+                        "type": "number",
+                        "format": "int32",
+                        "description": "Index zobrazenie položky na displeji. Metóda vracia objednávky v poradí už podľa indexu zobrazenia, tento údaj má len informačný charakter. Metóda 'SetOrderVisibleIndex' umožňuje posúvať objednávky na displeji. "
+                    }
+                }
+            },
+            "CashRegisterOrderSummaryItem": {
+                "type": "object",
+                "description": "Položka sumarizácie objednávok. Položka je súčtom rovnakých položiek bonovacej knihy, objednaných a ešte nepripravených položiek, ktoré je potrebné pripraviť/uvariť, tzv. SUMMARY INFO pre zobrazenie na displeji.",
+                "required": [
+                    "Name"
+                ],
+                "properties": {
+                    "IDNumStock": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor skladu, v ktorom sa v systéme OBERON položka nachádza. Ak nebude zadaný, položka sa bude považovať za neskladovú - takáto položka neovplyvní stavy zásob na sklade."
+                    },
+                    "IDNumStockCard": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor skladovej karty v systéme OBERON. Ak nebude zadaný, položka sa bude považovať za neskladovú - takáto položka neovplyvní stavy zásob na sklade."
+                    },
+                    "Number": {
+                        "type": "string",
+                        "description": "Číslo skladovej položky (skladovej karty)."
+                    },
+                    "Name": {
+                        "type": "string",
+                        "description": "Názov položky."
+                    },
+                    "CashRegisterCode": {
+                        "type": "string",
+                        "description": "Číslo (kód) položky pre Pokladnicu OBERON.",
+                        "example": "101"
+                    },
+                    "Amount": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Množstvo položky v danej mernej jednotke.",
+                        "example": "2"
+                    },
+                    "Unit": {
+                        "type": "string",
+                        "description": "Merná jednotka. Ak sa na položke používa aj alternatívna MJ (ak je tak nastavené na skladovej karte), tu je použitá alternatívna, pričom množstvo je uvádzané z hľadiska alternatívnej MJ, napr. Vodka 1 ks = 0.04 l.",
+                        "example": "ks"
+                    },
+                    "PriceWithVATUnit": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Jednotková cena s DPH za danú mernú jednotku. Ak sa na položke používa alternatívna MJ, cena je uvádzaná za alternatívnu MJ.",
+                        "example": "5.12"
+                    },
+                    "PriceWithVAT": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Celková cena sčítaných položik s DPH.",
+                        "example": "10.24"
+                    },
+                    "VatRate": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Sadzba DPH.",
+                        "example": "5.12"
+                    }
+                }
+            },
+
+            "SetOrderVisibleIndexArg": {
+                "description": "Parameter metódy 'SetOrderVisibleIndex' pre posun objednávky v poradí pri zobrazení na displeji. Umožňuje posunie objednávky doľava, doprava, na prvú alebo poslednú pozíciu. V parametri sa určuje spôsob posuvu a číslo objednávky.",
+                "type": "object",
+                "required": [],
+                "properties": {
+                    "PrinterNumbers": {
+                        "type": "array",
+                        "description": "Zoznam bonovacích tlačiarní (čísla), ktorých položky sa majú vrátiť. Ak nebude zadaná žiadna tlačiareň, budú vrátené položky určené pre všetky bonovacie tlačiarne.",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "example": [1,2,3]
+                    },
+                    "OrderNumber": {
+                        "type": "string",
+                        "description": "Hlavné číslo objednávky. Na jednoznačnú identifikáciu objednávky nestačí číslo, ale je potrebné uviesť aj číslo bonovacej tlačiarne (alebo viacerých bonovacích)."
+                    },
+                    "MovementMethod": {
+                        "type": "enum",
+                        "description": "Určuje spôsob posunutia objednávky v poradí zoznamu objednávok napr. pri zobrazení na displeji.",
+                        "oneOf": [
+                            {
+                                "const": 0,
+                                "title": "First - presunúť na začiatok zoznamu (na prvú pozíciu)."
+                            },
+                            {
+                                "const": 1,
+                                "title": "Previous - presunúť vľavo o jednu pozíciu (o jednu dopredu)."
+                            },
+                            {
+                                "const": 2,
+                                "title": "Next - presunúť vpravo o jednu pozíciu (o jednu dozadu)."
+                            },
+                            {
+                                "const": 3,
+                                "title": "Last - presunúť na koniec zoznamu."
+                            }
+                        ]
+                    }
+                }
+            },
+
+            "SetOrderItemDateTimeTakeOutArg": {
+                "description": "Parameter metódy 'SetOrderItemDateTimeTakeOut' pre nastavenie alebo zrušenie príznaku ukončenia prípravy jedla alebo nápoja.",
+                "type": "object",
+                "required": [],
+                "properties": {
+                    "IDNumOrderItem": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor položky v bonovacej knihe, s ktorým sa má pracovať. Ako identifikátor sa používa pole 'CashRegisterOrderItem.IDNum_BillItem'."                        
+                    },
+                    "ClearDateTimeTakeOut": {
+                        "type": "boolean",
+                        "description": "TRUE - zruší príznak ukončenia prípravy. FALSE - štandardne zapíše príznak ukončenia prípravy."
+                    },
+                    "SetDateTimeDelivery": {
+                        "type": "boolean",
+                        "description": "TRUE - zapíše sa súčasne aj dátum a čas doručenia (obslúženia) zákazníka, napr. pri prevzatí jedla čašníkom, prípadne pri donáškovej službe doručenie zákazníkovi."
+                    }
+                }
+            },
+
+            "SetOrderItemDateTimeDeliveryArg": {
+                "description": "Zapíše príznak dodanie jedla alebo nápoja na položku do bonovacej knihy (zapisuje sa aktuálny serverový dátum a čas). Dodaním sa myslí obslúženie zákazníka (vynesenie jedla), v prípade donáškovej služby to môže byť dátum a čas prevzatia kuriérom (prípadne dodania k zákazníkovi - záleží od systému práce). V prípade potreby aj zruší tento príznak.",
+                "type": "object",
+                "required": [],
+                "properties": {
+                    "IDNumOrderItem": {
+                        "type": "number",
+                        "format": "int64",
+                        "description": "Jednoznačný identifikátor položky v bonovacej knihe, s ktorým sa má pracovať. Ako identifikátor sa používa pole 'CashRegisterOrderItem.IDNum_BillItem'."                        
+                    },
+                    "ClearDateTimeDelivery": {
+                        "type": "boolean",
+                        "description": "TRUE - zruší príznak vynesenia. FALSE - štandardne zapíše príznak vynesenia."
+                    }
+                }
+            },
+
+            "LoginDataArg": {
                 "type": "object",
                 "description": "Parameter metódy pre prihlásenie používateľa.",
                 "required": [
@@ -433,19 +884,19 @@
                     "ApplicationName": {
                         "type": "string",
                         "description": "Pomenovanie aplikácie, ktorá sa pripája k webovej službe. Načítať zoznam prihlasených aplikácií (a používateľov) je možné pomocou funkcie 'GetUsersLoggedOnWebService'. Tým je možné napr. overiť zoznam pripojených externých zariadení do webovej služby.",
-                        "example": "BonovaciMonitor" 
+                        "example": "BonovaciMonitor"
                     },
                     "ApplicationVersion": {
                         "type": "string",
                         "description": "Číslo verzie aplikácie, ktorá sa pripája k webovej službe (odporúčame vo formáte x.x.x). Načítať zoznam prihlasených aplikácií (a používateľov) je možné pomocou funkcie 'GetUsersLoggedOnWebService'. Tým je možné napr. overiť zoznam pripojených externých zariadení do webovej služby.",
-                        "example": "0.9.9" 
+                        "example": "0.9.9"
                     },
                     "DataLangCode": {
                         "type": "string",
                         "description": "Je možné zadať dvojmiestny kód jazyka pre preklad údajov (sk, en, de a pod.).",
-                        "example": "sk"                        
+                        "example": "sk"
                     }
-                }                
+                }
             },
             "LoginDataPasswordTypeEnum": {
                 "type": "enum",
@@ -465,8 +916,7 @@
                     }
                 ]
             },
-
-            "RecordBaseInfo" : {
+            "RecordBaseInfo": {
                 "type": "object",
                 "description": "Spravidla sa používa v návratovej hodnote 'ResultValueOf' vo vlastnosti Data (Data As RecordBaseInfo). Je využívaná hlavne ako časť návratovej hodnoty pri metódach, ktoré vytvárajú nové záznamy - po vytvorení záznamu sa vracia jeho jednoznačný identifikátor a napr. číslo dokladu.",
                 "properties": {
@@ -517,14 +967,28 @@
                             }
                         ]
                     }
-                }                
+                }
             },
-            "ResultValueOf" : {
+            "ResultValueOfString": {
+                "allOf": [
+                    {                        
+                        "$ref": "#/components/schemas/ResultValueOf"
+                    },
+                    {
+                        "properties": {
+                            "data": {
+                                "type": "string"                                    
+                            }
+                        }
+                    }
+                ]
+            },
+            "ResultValueOf": {
                 "type": "object",
                 "description": "Základný objekt výsledku volaných metód API obsahuje údaje s pracovaní. Samotné výsledné data sa nachádzajú v parametri 'data', ktorého typ určruje volaná API metóda. Objekt je dedený vo výsledných objektov metód.",
                 "properties": {
                     "result": {
-                        "type": "bool",
+                        "type": "boolean",
                         "description": "Výsledok volanej metódy, result = TRUE - metóda bola úspešná, result = FALSE - metóda bola neúspešná.",
                         "example": false
                     },
@@ -540,8 +1004,8 @@
                         "type": "object",
                         "description": "Druh objektu výsledku určuje volaná API metóda."
                     }
-                }                
-            }            
+                }
+            }
         }
     }
 }
