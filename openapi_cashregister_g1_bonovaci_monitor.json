@@ -354,10 +354,10 @@
                             "schema": {
                                 "type": "object",
                                 "required": [
-                                    "username"
+                                    "loginData"
                                 ],
                                 "properties": {
-                                    "username": {
+                                    "loginData": {
                                         "type": "object",
                                         "description": "Údaje pre prihlásenie používateľa.",
                                         "$ref": "#/components/schemas/LoginDataArg"
@@ -873,7 +873,7 @@
                     },
                     "PasswordType": {
                         "type": "number",
-                        "description": "Určuje druh použitého hesla.",
+                        "description": "Určuje druh použitého hesla. Ak nie je zadané považujeme sa štandardné heslo",
                         "$ref": "#/components/schemas/LoginDataPasswordTypeEnum",
                         "example": "0"
                     },
